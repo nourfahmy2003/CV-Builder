@@ -22,10 +22,6 @@ The **CV Maker** is a web application designed to help users create professional
 3. Use the "Print" button to generate a printable version of your CV.
 4. You can reset or use default data to explore the app's functionality.
 
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Contact
 If you have any questions or suggestions, feel free to conatact me on my email nourfahmy2003@gmail.com.
 
