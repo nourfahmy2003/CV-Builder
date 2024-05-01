@@ -1,6 +1,6 @@
 # CV Maker - Vite + React + Vercel
 
-[![Project Live](https://img.shields.io/badge/Project-Live-brightgreen.svg)](cv-builder-noureldeen.vercel.app)
+[![Project Live](https://img.shields.io/badge/Project-Live-brightgreen.svg)]((https://cv-builder-noureldeen-nourfahmy2003s-projects.vercel.app/))
 
 ## Overview
 The **CV Maker** is a web application designed to help users create professional-looking resumes or CVs. This project is built with Vite and React to ensure a fast and efficient development experience. The application is hosted on Vercel, allowing for seamless deployment and a reliable hosting environment.
@@ -17,7 +17,7 @@ The **CV Maker** is a web application designed to help users create professional
 - **Vercel**: A cloud platform for static site hosting and serverless functions, used to deploy the project.
 
 ## How to Use
-1. Visit the [live project](cv-builder-noureldeen.vercel.app) to start creating your CV.
+1. Visit the [live project]((https://cv-builder-noureldeen-nourfahmy2003s-projects.vercel.app/)) to start creating your CV.
 2. Fill in your personal information, work experience, education, skills, and projects.
 3. Use the "Print" button to generate a printable version of your CV.
 4. You can reset or use default data to explore the app's functionality.
