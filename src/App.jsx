@@ -13,6 +13,7 @@ import { resetData } from './sections/resetdata';
 import { defaultData } from './sections/defaultdata';
 
 
+
 function App() {
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem('resumeData')) || {
@@ -142,9 +143,11 @@ function App() {
 
   const printRef = useRef();
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: 'Resume',
-  });
+      content: () => printRef.current,
+      documentTitle: 'Resume',
+      
+    });    
+ 
 
 
   const addEducation = () => {

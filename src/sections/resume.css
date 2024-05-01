@@ -85,3 +85,7 @@ h3 {
 .proj {
   padding: 10px;
 }
+
+.projname{
+    font-weight: bold;
+}
