@@ -11,6 +11,7 @@ import SkillForm from './sections/skills';
 import ProjectForm from './sections/projects';
 import { resetData } from './sections/resetdata';
 import { defaultData } from './sections/defaultdata';
+import AISuggestions from './sections/AISuggestions';
 
 
 
@@ -281,6 +282,7 @@ function App() {
   }, []);
 
   return (
+    <>
     <div className="flex-container">
       <div className="Forms">
         <form>
@@ -414,6 +416,8 @@ function App() {
         <Resume data={data} />
       </div>
     </div>
+    <AISuggestions data={data} />
+    </>
   );
 }
 

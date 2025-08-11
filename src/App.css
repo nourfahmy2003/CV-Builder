@@ -1,74 +1,95 @@
-/* General styles for the entire application */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
 .App {
   width: 100%;
   padding: 20px;
   display: flex;
-  justify-content: space-between; /* Ensures proper spacing between form and resume */
+  justify-content: space-between;
 }
 
 .flex-container {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
 }
 
 .Forms {
-  width: 30%; /* 30% for forms */
-  padding: 10mm;
-  background-color: #f9f9f9; /* Light background color */
+  width: 35%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 label {
   font-weight: bold;
-  color: #333; /* Darker text for better visibility */
+  color: #333;
 }
 
 input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #fff; /* White background for inputs */
-  color: #333; /* Darker text color for better contrast */
+  background-color: #fff;
+  color: #333;
   width: 100%;
 }
-
-
 
 /* Styles for the resume section */
 .Resume {
   float: right;
-  width: 210mm; /* A4 width */
-  height: auto; /* A4 height */
-  padding: 20mm; 
+  width: 210mm;
+  height: auto;
+  padding: 20mm;
   background-color: white;
   color: black;
   border: 1px solid #ddd;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 button {
   padding: 10px 20px;
   border-radius: 5px;
-  background-color: #007bff; /* Standard blue color for buttons */
-  color: white; /* White text on buttons */
-  border: none; /* No border */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s; /* Smooth transition */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+  background-color: #0056b3;
 }
 
 .textarea {
-  width: 90%; /* Makes the textarea take the full width */
-  padding: 10px; /* Adds padding inside the textarea */
-  border: 1px solid #ccc; /* Gives it a light border */
-  border-radius: 4px; /* Rounds the corners for a smoother look */
-  background-color: #fff; /* Ensures the background is white */
-  color: #333; /* Ensures the text is readable */
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
   height: auto;
-  outline: none; /* Removes the default outline on focus */
-  font-size: 14px; /* Sets a consistent font size */
-  line-height: 1.5; /* Improves readability with consistent spacing */
+  outline: none;
+  font-size: 14px;
+  line-height: 1.5;
   resize: none;
+}
+
+.suggestions {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #eef2ff;
+  border-radius: 8px;
+}
+
+.suggestions-output {
+  margin-top: 10px;
+  white-space: pre-wrap;
+  color: #333;
 }
