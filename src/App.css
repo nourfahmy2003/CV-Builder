@@ -13,18 +13,29 @@ body {
 
 .flex-container {
   display: flex;
-  justify-content: space-between;
   gap: 20px;
   align-items: flex-start;
 }
 
-.Forms {
-  width: 35%;
+.Forms,
+.suggestions {
+  flex: 1;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
   max-height: 90vh;
   overflow-y: auto;
+}
+
+.print-button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.suggestions {
+  background-color: #eef2ff;
 }
 
 label {
@@ -43,14 +54,21 @@ input {
 
 /* Styles for the resume section */
 .Resume {
-  float: right;
-  width: 210mm;
+  flex: 1;
+  width: 100%;
+  max-width: 210mm;
   height: auto;
-  padding: 20mm;
+  padding: 20px;
   background-color: white;
   color: black;
   border: 1px solid #ddd;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media print {
+  .Resume {
+    padding: 20mm;
+  }
 }
 
 button {
@@ -81,15 +99,17 @@ button:hover {
   resize: none;
 }
 
-.suggestions {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #eef2ff;
-  border-radius: 8px;
+.suggestions h2 {
+  margin-top: 0;
 }
 
 .suggestions-output {
   margin-top: 10px;
   white-space: pre-wrap;
   color: #333;
+}
+
+.error {
+  margin-top: 10px;
+  color: #b00020;
 }

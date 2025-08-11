@@ -3,16 +3,23 @@ import { useState } from 'react';
 function AISuggestions({ data }) {
   const [suggestions, setSuggestions] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const generateSuggestions = async () => {
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    if (!apiKey) {
+      setError('Set VITE_OPENAI_API_KEY to enable suggestions.');
+      return;
+    }
     setLoading(true);
+    setError('');
     setSuggestions('');
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
@@ -31,11 +38,12 @@ function AISuggestions({ data }) {
           ],
         }),
       });
+      if (!response.ok) throw new Error('Request failed');
       const result = await response.json();
       const message = result.choices?.[0]?.message?.content?.trim();
       setSuggestions(message || 'No suggestions found.');
     } catch (err) {
-      setSuggestions('Unable to generate suggestions.');
+      setError('Unable to generate suggestions.');
     } finally {
       setLoading(false);
     }
@@ -43,9 +51,11 @@ function AISuggestions({ data }) {
 
   return (
     <div className="suggestions">
+      <h2>AI Suggestions</h2>
       <button type="button" onClick={generateSuggestions} disabled={loading}>
         {loading ? 'Generating...' : 'Get AI Suggestions'}
       </button>
+      {error && <p className="error">{error}</p>}
       {suggestions && (
         <div className="suggestions-output">
           <p>{suggestions}</p>

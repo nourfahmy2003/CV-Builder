@@ -11,6 +11,7 @@ CV Maker is a web application that helps users build professional resumes direct
 - **Print Ready** – Generate a clean, printable version of your CV.
 - **Data Persistence** – Information is saved to local storage so progress isn't lost.
 - **Responsive Layout** – Updated styling provides a cleaner interface across devices.
+- **Streamlined Editing** – Form fields, live preview, and AI tips sit side by side for a smoother experience.
 
 ## Getting Started
 ### Prerequisites

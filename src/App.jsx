@@ -288,7 +288,7 @@ function App() {
         <form>
           {/* Place the print button at the top right */}
           <div className="print-button-container">
-            <button className="print-button" onClick={handlePrint()}>
+            <button className="print-button" onClick={handlePrint}>
               <FontAwesomeIcon icon={faPrint} />
             </button>
 
@@ -415,8 +415,8 @@ function App() {
       <div className="Resume" ref={printRef}>
         <Resume data={data} />
       </div>
+      <AISuggestions data={data} />
     </div>
-    <AISuggestions data={data} />
     </>
   );
 }
