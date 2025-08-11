@@ -3,25 +3,50 @@
 [![Project Live](https://img.shields.io/badge/Project-Live-brightgreen.svg)](https://cv-builder-noureldeen.vercel.app/)
 
 ## Overview
-The **CV Maker** is a web application designed to help users create professional-looking resumes or CVs. This project is built with Vite and React to ensure a fast and efficient development experience. The application is hosted on Vercel, allowing for seamless deployment and a reliable hosting environment.
+CV Maker is a lightweight resume builder built with Vite and React. The app lets you craft a professional CV, preview it in real time, and print it when you're done. It now includes an optional AI assistant that analyses your resume data and suggests improvements.
 
 ## Features
-- **Create Custom CVs**: Users can add personal information, work experiences, education, skills, and projects to create a personalized CV.
-- **Responsive Design**: The application is designed to work on various screen sizes, providing a consistent user experience across devices.
-- **Print-Ready**: The CV Maker includes a print functionality, allowing users to generate a print-ready version of their CV.
-- **Data Persistence**: User data is stored in local storage, ensuring that their information persists across sessions.
+- **Interactive editor** – add personal details, education, work experience, skills, and projects.
+- **AI suggestions** – send your resume data to OpenAI's API and receive constructive feedback. (Requires API key)
+- **Responsive and print-ready** – preview uses an A4 layout that can be printed directly from the browser.
+- **Data persistence** – entries are stored in local storage so they persist across reloads.
+- **Reset and default data** – quickly clear the form or load example data to explore the app.
 
-## Technologies Used
-- **Vite**: A modern frontend tooling system for faster build times and optimized production bundles.
-- **React**: A JavaScript library for building user interfaces, providing a modular and scalable approach to application development.
-- **Vercel**: A cloud platform for static site hosting and serverless functions, used to deploy the project.
+## Getting Started
+```bash
+git clone <repository>
+cd CV-Builder
+npm install
+```
 
-## How to Use
-1. Visit the [live project](https://cv-builder-noureldeen.vercel.app/) to start creating your CV.
-2. Fill in your personal information, work experience, education, skills, and projects.
-3. Use the "Print" button to generate a printable version of your CV.
-4. You can reset or use default data to explore the app's functionality.
+### Environment Variables
+AI suggestions require an OpenAI API key.
+
+1. Copy `.env.example` to `.env`.
+2. Replace `your_api_key_here` with a valid key.
+
+```bash
+cp .env.example .env
+# edit .env and set VITE_OPENAI_KEY
+```
+
+### Development
+Run the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
+
+## Usage
+1. Fill out the form with your information.
+2. Click **AI Suggestions** to receive improvement tips.
+3. Use the **Print** button to generate a printable CV.
+4. Reset or load default data at any time.
+
+## Contributing
+Pull requests are welcome! Please run `npm run lint` before submitting changes.
 
 ## Contact
-If you have any questions or suggestions, feel free to conatact me on my email nourfahmy2003@gmail.com.
-
+Questions or suggestions? Email [nourfahmy2003@gmail.com](mailto:nourfahmy2003@gmail.com).

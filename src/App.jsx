@@ -9,6 +9,7 @@ import EducationForm from './sections/education';
 import Resume from './sections/resume';
 import SkillForm from './sections/skills';
 import ProjectForm from './sections/projects';
+import AISuggestions from './sections/aiSuggestions';
 import { resetData } from './sections/resetdata';
 import { defaultData } from './sections/defaultdata';
 
@@ -407,6 +408,7 @@ function App() {
             Add Project
           </button>
         </form>
+        <AISuggestions data={data} />
       </div>
 
      
