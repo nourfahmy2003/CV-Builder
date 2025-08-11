@@ -11,6 +11,7 @@ import SkillForm from './sections/skills';
 import ProjectForm from './sections/projects';
 import { resetData } from './sections/resetdata';
 import { defaultData } from './sections/defaultdata';
+import AISuggestions from './sections/AISuggestions';
 
 
 
@@ -281,12 +282,13 @@ function App() {
   }, []);
 
   return (
+    <>
     <div className="flex-container">
       <div className="Forms">
         <form>
           {/* Place the print button at the top right */}
           <div className="print-button-container">
-            <button className="print-button" onClick={handlePrint()}>
+            <button className="print-button" onClick={handlePrint}>
               <FontAwesomeIcon icon={faPrint} />
             </button>
 
@@ -413,7 +415,9 @@ function App() {
       <div className="Resume" ref={printRef}>
         <Resume data={data} />
       </div>
+      <AISuggestions data={data} />
     </div>
+    </>
   );
 }
 
