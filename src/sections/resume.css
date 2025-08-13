@@ -38,6 +38,8 @@ body {
 
 .education-item, .experience-item, .project-item {
     margin-bottom: 0.5em;
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
 .education-header, .experience-header, .project-header, .education-details, .experience-details, .project-details {
@@ -56,6 +58,8 @@ body {
 
 .skills-list {
     columns: 2;
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
 .skill-item {
