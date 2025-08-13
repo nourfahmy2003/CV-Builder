@@ -1,0 +1,913 @@
+/* General styles for the entire application */
+.App {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between; /* Ensures proper spacing between form and resume */
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between; 
+}
+
+.Forms {
+  width: 480px; /* Consistent with layout shell width */
+  padding: 10mm;
+  background-color: #f9f9f9; /* Light background color */
+}
+
+label {
+  font-weight: bold;
+  color: #333; /* Darker text for better visibility */
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff; /* White background for inputs */
+  color: #333; /* Darker text color for better contrast */
+  width: 100%;
+}
+
+/* Experience section */
+.experience-section .desc-container .desc-item,
+.project-section .desc-container .desc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+.experience-section .desc-container .desc-item:before,
+.project-section .desc-container .desc-item:before {
+  content: "•";
+  color: #3358ff;
+  font-size: 1.2em;
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.experience-section .desc-container .desc-item textarea,
+.project-section .desc-container .desc-item textarea {
+  flex: 1;
+  width: calc(100% - 48px); /* Account for bullet and delete button */
+  max-width: 400px;
+  min-width: 200px;
+  padding: 12px 14px;
+  min-height: 25px;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.5;
+  height: auto;
+  word-wrap: break-word;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 13px;
+  white-space: pre-wrap;
+  margin-right: 8px;
+  background-color: #0e1520;
+  border: 1px solid #243146;
+  border-radius: 10px;
+  color: var(--primary-text);
+}
+
+.experience-section .desc-container .desc-item textarea:focus,
+.project-section .desc-container .desc-item textarea:focus {
+  border-color: #3358ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51,88,255,.15);
+}
+
+.experience-section .desc-container .desc-item .bullet-delete,
+.project-section .desc-container .desc-item .bullet-delete {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 59, 59, 0.7);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.experience-section .desc-container .desc-item:hover .bullet-delete,
+.project-section .desc-container .desc-item:hover .bullet-delete {
+  opacity: 1;
+}
+
+.experience-section .desc-container .desc-item .bullet-delete:hover,
+.project-section .desc-container .desc-item .bullet-delete:hover {
+  color: #ff3b3b;
+  transform: scale(1.15);
+  background: rgba(255, 59, 59, 0.1);
+}
+
+.experience-section .desc-container textarea:focus {
+  border-color: #3358ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51,88,255,.15);
+}
+
+.experience-section .desc-container .bullet-delete {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 59, 59, 0.7);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.experience-section .desc-container .desc-item:hover .bullet-delete {
+  opacity: 1;
+}
+
+.experience-section .desc-container .bullet-delete:hover {
+  color: #ff3b3b;
+  transform: translateY(-50%) scale(1.15);
+}
+
+
+
+/* Styles for the resume section */
+.Resume {
+  float: right;
+  width: 210mm; /* A4 width - keeping this fixed for paper size */
+  height: auto; /* A4 height */
+  padding: 20mm;
+  background-color: white;
+  color: black;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff; /* Standard blue color for buttons */
+  color: white; /* White text on buttons */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: all 0.2s ease; /* Smooth transition for all properties */
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Delete button styling */
+.delete-btn {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 59, 59, 0.1);
+  color: rgba(255, 59, 59, 0.8);
+  font-size: 18px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  margin-left: auto;
+  border: 1px solid rgba(255, 59, 59, 0.2);
+}
+
+.delete-btn:hover {
+  background: rgba(255, 59, 59, 0.15);
+  color: #ff3b3b;
+  transform: scale(1.1);
+}
+
+/* For light mode */
+@media (prefers-color-scheme: light) {
+  .delete-btn {
+    background: rgba(255, 59, 59, 0.08);
+    color: rgba(255, 59, 59, 0.9);
+    border-color: rgba(255, 59, 59, 0.15);
+  }
+  
+  .delete-btn:hover {
+    background: rgba(255, 59, 59, 0.12);
+    color: #ff3b3b;
+  }
+}
+
+.textarea {
+  width: 90%; /* Makes the textarea take the full width */
+  padding: 10px; /* Adds padding inside the textarea */
+  border: 1px solid #ccc; /* Gives it a light border */
+  border-radius: 4px; /* Rounds the corners for a smoother look */
+  background-color: #fff; /* Ensures the background is white */
+  color: #333; /* Ensures the text is readable */
+  height: auto;
+  outline: none; /* Removes the default outline on focus */
+  font-size: 14px; /* Sets a consistent font size */
+  line-height: 1.5; /* Improves readability with consistent spacing */
+  resize: none;
+}
+
+/* Layout shell */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(480px, 480px) 1fr;
+  gap: 0;
+  min-height: 100vh;
+  background: #0b0d12; /* dark canvas */
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden; /* Prevent horizontal scroll */
+  width: 100%;
+}
+
+.layout.closed { 
+  grid-template-columns: 32px 1fr;
+}
+
+.sidebar { 
+  position: relative; 
+  background: #0f131a; 
+  color: #dfe6f3; 
+  border-right: 1px solid #1c2330;
+  transition: all 0.3s ease;
+  height: 100vh;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.form-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.sidebar > * {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.layout.closed .sidebar {
+  width: 32px;
+  overflow: visible;
+}
+
+.layout.closed .form-scroll,
+.layout.closed .topbar {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.layout.closed .sidebar > *:not(.collapse) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.collapse { 
+  position: absolute;
+  top: 50%;
+  right: -32px;
+  width: 40px; 
+  height: 48px; 
+  border-radius: 12px; 
+  background: #0f131a; 
+  color: #475468;
+  box-shadow: none;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: all 0.2s ease;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border: none;
+  outline: none;
+}
+
+/* Make the arrow icon more subtle */
+.collapse svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.25;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+/* Add a subtle connection effect to make it look attached */
+.collapse::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 24px;
+  background: linear-gradient(to right, transparent, #111827);
+  pointer-events: none;
+}
+
+/* Subtle state changes for collapse button */
+.layout.closed .collapse {
+  right: -36px;
+  background: #0f131a;
+}
+
+.collapse:hover {
+  transform: translateY(-50%) !important;
+}
+
+.collapse:hover svg {
+  opacity: 0.8;
+}
+
+/* Remove focus outline */
+.collapse:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 59, 59, 0.2) !important;
+  color: #ff3b3b !important;
+  transform: scale(1.15);
+  border-color: rgba(255, 59, 59, 0.4);
+  box-shadow: 0 0 12px rgba(255, 59, 59, 0.15);
+}
+
+.form-scroll { 
+  padding: 24px 52px 80px 20px; 
+  height: 100vh; 
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0 auto;
+}
+
+.topbar { 
+  position: sticky; 
+  top: 0;
+  z-index: 5; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 12px; 
+  padding: 10px 32px; 
+  margin: -2px 0px 4px -10px; 
+  border-bottom: 1px solid #1c2330; 
+}
+.topbar h2 { font-size: 16px; font-weight: 600; letter-spacing: .2px; color: #e5edff; margin: 0 8px; }
+.topbar .right { display: flex; gap: 8px; }
+
+.btn { 
+  appearance: none; 
+  border: 1px solid #2a3446; 
+  background: #141a22; 
+  color: #e9f0ff; 
+  padding: 8px 16px; 
+  border-radius: 10px; 
+  font-size: 13px; 
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  transition: all 0.2s ease;
+}
+
+.btn:hover { 
+  border-color: #415275;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+
+.btn.primary { 
+  background: #3358ff; 
+  border-color: #3358ff;
+  padding: 8px 20px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(51,88,255,.25);
+}
+
+.btn.primary:hover { 
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(51,88,255,.3);
+}
+
+.btn.ghost { 
+  background: #10151c;
+  border-color: #2a3446;
+}
+
+.card { 
+  background: #0b1017; 
+  border: 1px solid #1d2737; 
+  border-radius: 14px; 
+  padding: 20px; 
+  margin: 24px 0;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+.card:hover {
+  border-color: #2a3651;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.card h3 { 
+  margin: 0 0 20px; 
+  font-size: 18px; 
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.card h3 button {
+  margin-left: 8px;
+}
+
+.card h4 {
+  font-size: 15px;
+  color: #e5edff;
+  margin: 16px 0 12px;
+  font-weight: 500;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* Subheading delete button */
+.card h4 .delete-btn {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  margin: 0;
+  position: relative;
+}
+
+.card h4 .delete-btn:before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.card h4 .delete-btn:hover:before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Inputs */
+label { 
+  display: grid; 
+  gap: 6px; 
+  margin-bottom: 14px; 
+  font-size: 12px; 
+  color: #9fb3d9;
+  font-weight: 500;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.website-group,
+.github-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+input, textarea, select { 
+  width: calc(100% - 28px); /* Account for padding */
+  max-width: 400px; /* Consistent max width */
+  min-width: 200px; /* Ensure minimum width */
+  padding: 12px 14px; 
+  border-radius: 10px; 
+  border: 1px solid #243146; 
+  background: #0e1520; 
+  color: #e9f0ff; 
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #3358ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51,88,255,.15);
+}
+
+textarea { 
+  min-height: 92px; 
+  resize: vertical;
+  width: calc(100% - 28px);
+  max-width: 400px;
+}
+.input-group {
+  position: relative;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.input-group label {
+  flex: 1;
+}
+
+.input-group input {
+  width: calc(100% - 28px);
+  max-width: 400px;
+  min-width: 200px;
+}
+
+.input-group .delete-btn {
+  margin-top: 28px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 59, 59, 0.1);
+  color: rgba(255, 59, 59, 0.7);
+  border: 1px solid rgba(255, 59, 59, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.input-group:hover .delete-btn {
+  opacity: 1;
+}
+
+.input-group .delete-btn:hover {
+  background: rgba(255, 59, 59, 0.15);
+  color: #ff3b3b;
+  transform: scale(1.15);
+}
+
+/* Description bullet points styling */
+.description-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.description-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+.description-item:before {
+  content: "•";
+  color: #3358ff;
+  font-size: 1.2em;
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.description-item textarea {
+  flex: 1;
+  width: calc(100% - 48px); /* Account for bullet and delete button */
+  max-width: 400px;
+  min-width: 200px;
+  padding: 12px 14px;
+  min-height: 25px;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.5;
+  height: auto;
+  word-wrap: break-word;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 13px;
+  white-space: pre-wrap;
+  margin-right: 8px;
+}
+
+.description-item .bullet-delete {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 59, 59, 0.7);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.description-item:hover .bullet-delete {
+  opacity: 1;
+}
+
+.description-item .bullet-delete:hover {
+  color: #ff3b3b;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.add-bullet-btn {
+  margin-top: 8px;
+  background: rgba(51, 88, 255, 0.1);
+  color: #3358ff;
+  border: 1px solid rgba(51, 88, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.add-bullet-btn:hover {
+  background: rgba(51, 88, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.add-bullet-btn:before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.add-bullet-btn:hover:before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: 1fr; }
+@media (max-width: 900px){ .grid-2 { grid-template-columns: 1fr; } }
+
+/* AI card */
+.card.ai { border-color: #2a3651; background: #0d1320; }
+.ai-head { display:flex; align-items:center; gap:8px; justify-content:space-between; }
+.ai-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.hint { margin-top: 8px; color: #88a0c9; font-size: 12px; }
+.error { color: #ff6b6b; font-size: 12px; }
+.spinner { width: 14px; height: 14px; border: 2px solid #3e4f70; border-top-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Preview */
+.preview { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background: #f0f2f5;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 40px; /* Space between pages */
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.preview-paper { 
+  width: 210mm; 
+  height: 297mm; 
+  padding: 25mm 25mm;
+  background: #fff; 
+  color: #111; 
+  border-radius: 12px; 
+  box-shadow: 0 4px 24px rgba(0,0,0,.12),
+              0 12px 48px rgba(0,0,0,.12); 
+  position: relative;
+  overflow: visible;
+  page-break-after: always;
+  box-sizing: border-box;
+}
+
+/* Section Headers in Preview */
+.preview-paper h3 {
+  color: #333;
+  font-size: 20px;
+  margin: 24px 0 16px;
+  border-bottom: 2px solid #3358ff;
+  padding-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-paper h4 {
+  color: #444;
+  font-size: 16px;
+  margin: 16px 0 8px;
+  font-weight: 600;
+}
+
+/* Additional page styling */
+.preview-paper:not(:first-child) {
+  margin-top: -20px; /* Overlap to show connection between pages */
+}
+
+.preview-paper:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  height: 20px;
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,0.08) 0%,
+    rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
+/* Page number indicator */
+.preview-paper::after {
+  content: 'Page ' counter(page);
+  position: absolute;
+  bottom: 10mm;
+  right: 10mm;
+  font-size: 10px;
+  color: #666;
+  counter-increment: page;
+}
+
+/* Initialize page counter */
+.preview {
+  counter-reset: page;
+}
+
+/* Page break indicator */
+.preview-paper[style*="height: 297mm"]:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px;
+  background: linear-gradient(to bottom, 
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.05) 100%);
+  pointer-events: none;
+}
+
+.preview-paper::before {
+  content: '';
+  position: absolute;
+  top: 5mm;
+  left: 5mm;
+  right: 5mm;
+  bottom: 5mm;
+  border: 1px dashed rgba(0,0,0,.1);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* Print */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar, .collapse, .topbar { 
+    display: none !important; 
+  }
+  
+  .layout { 
+    display: block !important;
+    height: auto !important;
+  }
+  
+  .preview { 
+    padding: 0 !important;
+    height: auto !important;
+    background: none !important;
+  }
+  
+  .preview-paper { 
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 25mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    position: relative !important;
+  }
+
+  .preview-paper::before {
+    display: none !important;
+  }
+}
+
+.card h4{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;   /* was space-between */
+  gap: 8px;                      /* space between text and X */
+}
+
+/* make sure nothing pushes it away */
+.card h4 .delete-btn{
+  margin-left: 0;                /* no auto margin pushing to the right */
+}
+
+.btn{
+  padding: 8px 12px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 4px;
+  background: #3358ff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.btn:hover{
+  background: #254edb;
+}

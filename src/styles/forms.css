@@ -1,0 +1,185 @@
+/* Form Elements Styling */
+
+/* Description Bullets */
+.description-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.description-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+.description-item:before {
+  content: "•";
+  color: #3358ff;
+  font-size: 1.2em;
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.description-item textarea {
+  flex: 1;
+  width: calc(100% - 48px); /* Account for bullet and delete button */
+  max-width: 400px;
+  min-width: 200px;
+  padding: 12px 14px;
+  min-height: 25px;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.5;
+  height: auto;
+  word-wrap: break-word;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 13px;
+  white-space: pre-wrap;
+  margin-right: 8px;
+  background-color: #0e1520;
+  border: 1px solid #243146;
+  border-radius: 10px;
+  color: #e9f0ff;
+}
+
+.description-item textarea:focus {
+  border-color: #3358ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51,88,255,.15);
+}
+
+.description-item .bullet-delete {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 59, 59, 0.7);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.description-item:hover .bullet-delete {
+  opacity: 1;
+}
+
+.description-item .bullet-delete:hover {
+  color: #ff3b3b;
+  transform: scale(1.15);
+  background: rgba(255, 59, 59, 0.1);
+}
+
+/* Add Bullet Button */
+.add-bullet-btn {
+  margin-top: 12px;
+  background: rgba(51, 88, 255, 0.1);
+  color: #3358ff;
+  border: 1px solid rgba(51, 88, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.add-bullet-btn:hover {
+  background: rgba(51, 88, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Delete Button */
+.delete-btn {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 59, 59, 0.1);
+  color: rgba(255, 59, 59, 0.8);
+  font-size: 16px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 59, 59, 0.2);
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 59, 59, 0.15);
+  color: #ff3b3b;
+  transform: scale(1.1);
+}
+
+/* Section Actions */
+.section-actions {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0 20px;
+}
+
+/* Form Inputs */
+input, textarea, select { 
+  width: calc(100% - 28px);
+  max-width: 400px;
+  min-width: 200px;
+  padding: 12px 14px; 
+  border-radius: 10px; 
+  border: 1px solid #243146; 
+  background: #0e1520; 
+  color: #e9f0ff; 
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #3358ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51,88,255,.15);
+}
+
+label { 
+  display: grid; 
+  gap: 6px; 
+  margin-bottom: 12px; 
+  font-size: 12px; 
+  color: #9fb3d9;
+  font-weight: 500;
+}
+
+/* Add Project/Experience Button */
+.add-new-btn {
+  margin-top: 16px;
+  background: #3358ff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-new-btn:hover {
+  background: #4066ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(51,88,255,.25);
+}
