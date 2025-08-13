@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  background: #f0f2f5;
+  background: var(--base-color);
   overflow-x: hidden;
   gap: 40px; /* Space between pages */
   box-sizing: border-box;
@@ -21,19 +21,24 @@ a {
     color: black;
 }
 
-.preview-paper { 
-  width: 210mm; 
-  height: 297mm; 
+.preview-paper {
+  width: 210mm;
+  height: 297mm;
   padding: 25mm 25mm;
-  background: #fff; 
-  color: #111; 
-  border-radius: 12px; 
-  box-shadow: 0 4px 24px rgba(0,0,0,.12),
-              0 12px 48px rgba(0,0,0,.12); 
+  background: #fff;
+  color: #111;
+  border-radius: 12px;
+  box-shadow: var(--subtle-shadow);
   position: relative;
   overflow: visible;
   page-break-after: always;
   box-sizing: border-box;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.preview-paper:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elevated-shadow);
 }
 
 /* Page number indicator */
@@ -51,10 +56,11 @@ a {
   color: #333;
   font-size: 20px;
   margin: 24px 0 16px;
-  border-bottom: 2px solid #3358ff;
+  border-bottom: 2px solid var(--accent-color);
   padding-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: var(--font-heading);
 }
 
 .preview-paper h4 {
@@ -62,6 +68,7 @@ a {
   font-size: 16px;
   margin: 16px 0 8px;
   font-weight: 600;
+  font-family: var(--font-heading);
 }
 
 /* Additional page styling */
