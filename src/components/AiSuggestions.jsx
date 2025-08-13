@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import Groq from 'groq-sdk';
 import '../styles/ai-suggestions.css';
+import BeforeAfterSlider from './BeforeAfterSlider';
 
 function AiSuggestions({ resumeData, onSuggestionReceived }) {
   const [suggestions, setSuggestions] = useState(null);
@@ -42,11 +43,9 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
     setSuggestions(null);
     setError(null);
 
-    // Abort controller
     abortControllerRef.current = new AbortController();
 
     try {
-      // Build resume text
       const resumeContent = extractResumeContent(resumeData);
       if (!resumeContent) {
         setError("No project or experience data found to analyze.");
@@ -54,13 +53,13 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
         return;
       }
 
-      // Groq client
+      const batches = buildBatches(resumeContent, 4000);
+
       const groq = new Groq({
         apiKey: import.meta.env.VITE_GROQ_API_KEY,
         dangerouslyAllowBrowser: true,
       });
 
-      // STRONGER SYSTEM PROMPT
       const systemPrompt = `
 You are an expert resume assistant.
 Return ONLY a valid JSON object (no prose, no markdown, no code fences).
@@ -108,57 +107,66 @@ Hard rules:
 - If nothing to improve, return empty arrays.
 `.trim();
 
-      const userPrompt = `
+      const combined = { projects: [], experiences: [], skills: { add: [], replace: [] } };
+
+      for (const batch of batches) {
+        const userPrompt = `
 Analyze my resume content and produce JSON in the schema above.
 
 RESUME CONTENT:
-${resumeContent}
+${batch}
 `.trim();
 
-      let res;
-      try {
-        res = await groq.chat.completions.create(
-          {
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt },
-            ],
-            temperature: 0.1,
-            top_p: 1,
-            max_tokens: 1800,
-            stream: false,
-            // JSON mode
-            response_format: { type: "json_object" },
-          },
-          { signal: abortControllerRef.current?.signal }
-        );
-      } catch (apiErr) {
-        // If Groq returns json_validate_failed, show the raw generation to help fix prompt
-        const fail = apiErr?.error?.failed_generation;
-        if (fail) {
-          setError(
-            "Model returned malformed JSON. Showing raw output so you can inspect:\n\n" +
-            fail
+        let text;
+        try {
+          const res = await groq.chat.completions.create(
+            {
+              model: "llama-3.3-70b-versatile",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt },
+              ],
+              temperature: 0.1,
+              top_p: 1,
+              max_tokens: 800,
+              stream: false,
+              response_format: { type: "json_object" },
+            },
+            { signal: abortControllerRef.current?.signal }
           );
-        } else {
-          setError(apiErr.message || "Request failed.");
+          text = res?.choices?.[0]?.message?.content ?? "";
+        } catch (apiErr) {
+          const fail = apiErr?.error?.failed_generation;
+          if (fail) {
+            text = fail;
+          } else {
+            setError(apiErr.message || "Request failed.");
+            setIsLoading(false);
+            return;
+          }
         }
+
+        const parsed = safeParseJson(text);
+        if (!parsed) continue;
+        const cleaned = cleanParsed(parsed);
+        combined.projects.push(...cleaned.projects);
+        combined.experiences.push(...cleaned.experiences);
+        combined.skills.add.push(...cleaned.skills.add);
+        combined.skills.replace.push(...cleaned.skills.replace);
+      }
+
+      if (
+        combined.projects.length === 0 &&
+        combined.experiences.length === 0 &&
+        combined.skills.add.length === 0 &&
+        combined.skills.replace.length === 0
+      ) {
+        setError("No valid suggestions returned.");
         setIsLoading(false);
         return;
       }
 
-      const text = res?.choices?.[0]?.message?.content ?? "";
-
-      // --- Robust parse with a tiny repair fallback ---
-      const parsed = safeParseJson(text);
-      if (!parsed) {
-        setError("Model did not return valid JSON. Please try again.");
-        setIsLoading(false);
-        return;
-      }
-
-      const expItems = parsed.experiences?.flatMap(exp =>
+      const expItems = combined.experiences.flatMap(exp =>
         exp.items.map((item, index) => ({
           key: `exp-${exp.id}-${index}`,
           section: 'experiences',
@@ -168,8 +176,8 @@ ${resumeContent}
           improved: item.improved,
           removing: false,
         }))
-      ) || [];
-      const projItems = parsed.projects?.flatMap(proj =>
+      );
+      const projItems = combined.projects.flatMap(proj =>
         proj.items.map((item, index) => ({
           key: `proj-${proj.id}-${index}`,
           section: 'projects',
@@ -179,23 +187,24 @@ ${resumeContent}
           improved: item.improved,
           removing: false,
         }))
-      ) || [];
+      );
       const skillItems = [
-        ...(parsed.skills?.add?.map((skill, index) => ({
+        ...combined.skills.add.map((skill, index) => ({
           key: `skill-add-${index}`,
           section: 'skills',
           old: '',
           improved: skill,
           removing: false,
-        })) || []),
-        ...(parsed.skills?.replace?.map((skill, index) => ({
+        })),
+        ...combined.skills.replace.map((skill, index) => ({
           key: `skill-replace-${index}`,
           section: 'skills',
           old: skill.old,
           improved: skill.improved,
           removing: false,
-        })) || []),
+        })),
       ];
+
       setSuggestions({
         experiences: expItems,
         projects: projItems,
@@ -210,12 +219,88 @@ ${resumeContent}
     }
   }
 
+  function buildBatches(text, maxChars) {
+    const lines = text.split('\n');
+    const batches = [];
+    let current = '';
+    for (const line of lines) {
+      if ((current + '\n' + line).length > maxChars && current) {
+        batches.push(current.trim());
+        current = line;
+      } else {
+        current += (current ? '\n' : '') + line;
+      }
+    }
+    if (current.trim()) batches.push(current.trim());
+    return batches;
+  }
+
+  function sanitizeBullet(str) {
+    return (str || '').replace(/[\n\r]+/g, ' ').replace(/["\\]/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  function cleanParsed(raw) {
+    const result = { projects: [], experiences: [], skills: { add: [], replace: [] } };
+    const validActions = ['replace', 'add'];
+
+    if (Array.isArray(raw?.projects)) {
+      raw.projects.forEach(p => {
+        const keys = Object.keys(p || {});
+        if (!['id', 'title', 'items'].every(k => keys.includes(k)) || keys.length !== 3) return;
+        const items = Array.isArray(p.items)
+          ? p.items.reduce((acc, it) => {
+              const k = Object.keys(it || {});
+              if (!['old', 'improved', 'action'].every(x => k.includes(x)) || k.length !== 3) return acc;
+              if (!validActions.includes(it.action)) return acc;
+              const action = it.action === 'replace' && it.old?.trim() ? 'replace' : 'add';
+              acc.push({ old: action === 'replace' ? it.old : '', improved: sanitizeBullet(it.improved), action });
+              return acc;
+            }, [])
+          : [];
+        if (items.length) result.projects.push({ id: p.id, title: p.title, items });
+      });
+    }
+
+    if (Array.isArray(raw?.experiences)) {
+      raw.experiences.forEach(p => {
+        const keys = Object.keys(p || {});
+        if (!['id', 'title', 'items'].every(k => keys.includes(k)) || keys.length !== 3) return;
+        const items = Array.isArray(p.items)
+          ? p.items.reduce((acc, it) => {
+              const k = Object.keys(it || {});
+              if (!['old', 'improved', 'action'].every(x => k.includes(x)) || k.length !== 3) return acc;
+              if (!validActions.includes(it.action)) return acc;
+              const action = it.action === 'replace' && it.old?.trim() ? 'replace' : 'add';
+              acc.push({ old: action === 'replace' ? it.old : '', improved: sanitizeBullet(it.improved), action });
+              return acc;
+            }, [])
+          : [];
+        if (items.length) result.experiences.push({ id: p.id, title: p.title, items });
+      });
+    }
+
+    const skills = raw?.skills || {};
+    if (Array.isArray(skills.add)) {
+      skills.add.forEach(s => {
+        if (typeof s === 'string' && s.trim()) result.skills.add.push(sanitizeBullet(s));
+      });
+    }
+    if (Array.isArray(skills.replace)) {
+      skills.replace.forEach(s => {
+        const k = Object.keys(s || {});
+        if (!['old', 'improved'].every(x => k.includes(x)) || k.length !== 2) return;
+        result.skills.replace.push({ old: s.old, improved: sanitizeBullet(s.improved) });
+      });
+    }
+
+    return result;
+  }
+
   /** Try strict JSON.parse; if it fails, trim to the outermost braces and parse again. */
   function safeParseJson(s) {
     try {
       return JSON.parse(s);
     } catch {
-      // Remove any leading/trailing noise (e.g., stray backticks or extra braces)
       const start = s.indexOf("{");
       const end = s.lastIndexOf("}");
       if (start !== -1 && end !== -1 && end > start) {
@@ -306,8 +391,7 @@ ${resumeContent}
               <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
                 <button className="remove-btn" onClick={() => triggerRemove('experiences', item.key)}>×</button>
                 {item.context && <h5>{item.context}</h5>}
-                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
-                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <BeforeAfterSlider before={item.old} after={item.improved} />
                 <div className="row gap-s">
                   <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
                   <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
@@ -318,8 +402,7 @@ ${resumeContent}
               <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
                 <button className="remove-btn" onClick={() => triggerRemove('projects', item.key)}>×</button>
                 {item.context && <h5>{item.context}</h5>}
-                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
-                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <BeforeAfterSlider before={item.old} after={item.improved} />
                 <div className="row gap-s">
                   <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
                   <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
