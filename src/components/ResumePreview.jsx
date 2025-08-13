@@ -96,6 +96,7 @@ const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
       containerRef.current.classList.add('flash');
       setTimeout(() => containerRef.current && containerRef.current.classList.remove('flash'), 300);
     }
+
   }, [data]);
 
   return (

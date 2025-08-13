@@ -14,7 +14,6 @@
   animation: flash 0.3s ease;
 }
 
-
 .preview-measure {
   position: absolute;
   visibility: hidden;
@@ -62,7 +61,6 @@ a {
   from { opacity: 0.3; }
   to { opacity: 1; }
 }
-
 .preview-paper:last-child {
   page-break-after: avoid;
   break-after: avoid;

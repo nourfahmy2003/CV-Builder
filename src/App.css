@@ -372,6 +372,7 @@ button:hover {
 
 .card.collapsible .card-body {
   margin-top: 20px;
+
 }
 .card:hover {
   border-color: var(--accent-color);
