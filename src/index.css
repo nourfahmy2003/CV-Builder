@@ -1,17 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lora:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Source+Sans+Pro:wght@400;600&display=swap');
 
 :root {
   /* Color Palette */
-  --base-color: #1A202C; /* Deep Navy */
-  --accent-color: #008080; /* Teal */
-  --text-color: #E2E8F0;
-  --card-bg: #2D3748;
-  --border-color: #4A5568;
-  --subtle-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --base-color: #0f172a; /* Deep Navy */
+  --surface-color: #1e293b; /* Card surface */
+  --accent-color: #0ea5e9; /* Teal accent */
+  --accent-color-hover: #38bdf8;
+  --text-color: #f1f5f9;
+  --muted-text: #94a3b8;
+  --card-bg: var(--surface-color);
+  --border-color: #334155;
+  --subtle-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  --elevated-shadow: 0 8px 16px rgba(0,0,0,0.15);
 
   /* Typography */
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Lora', serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Source Sans Pro', sans-serif;
 
   font-family: var(--font-body);
   line-height: 1.5;
@@ -29,11 +33,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--accent-color);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--accent-color-hover);
 }
 
 body {
@@ -49,23 +53,41 @@ h1 {
   line-height: 1.1;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: none;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--accent-color);
+  color: #fff;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 button:hover {
-  border-color: #646cff;
+  background-color: var(--accent-color-hover);
+  transform: scale(1.02);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.4);
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -74,9 +96,9 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: var(--accent-color-hover);
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--accent-color);
   }
 }
