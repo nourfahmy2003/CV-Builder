@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  background: #f0f2f5;
+  background: var(--base-color);
   overflow-x: hidden;
   gap: 40px; /* Space between pages */
   box-sizing: border-box;
@@ -21,24 +21,28 @@ a {
     color: black;
 }
 
-.preview-paper { 
-  width: 210mm; 
-  height: 297mm; 
-  padding: 25mm 25mm;
-  background: #fff; 
-  color: #111; 
-  border-radius: 12px; 
-  box-shadow: 0 4px 24px rgba(0,0,0,.12),
-              0 12px 48px rgba(0,0,0,.12); 
+.preview-paper {
+  width: 210mm;
+  height: 297mm;
+  padding: 25mm 25mm 35mm;
+  background: #fff;
+  color: #111;
+  border-radius: 12px;
+  box-shadow: var(--subtle-shadow);
   position: relative;
   overflow: visible;
   page-break-after: always;
   box-sizing: border-box;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.preview-paper:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elevated-shadow);
 }
 
 /* Page number indicator */
-.preview-paper::after {
-  content: "Page " attr(data-page) " / " attr(data-total);
+.page-footer {
   position: absolute;
   bottom: 10mm;
   right: 10mm;
@@ -51,10 +55,11 @@ a {
   color: #333;
   font-size: 20px;
   margin: 24px 0 16px;
-  border-bottom: 2px solid #3358ff;
+  border-bottom: 2px solid var(--accent-color);
   padding-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: var(--font-heading);
 }
 
 .preview-paper h4 {
@@ -62,6 +67,7 @@ a {
   font-size: 16px;
   margin: 16px 0 8px;
   font-weight: 600;
+  font-family: var(--font-heading);
 }
 
 /* Additional page styling */
@@ -69,14 +75,7 @@ a {
   margin-top: -20px; /* Overlap to show connection between pages */
 }
 
-.preview-paper:not(:last-child)::after {
-  content: "Page " attr(data-page) " / " attr(data-total);
-  position: absolute;
-  bottom: 10mm;
-  right: 10mm;
-  font-size: 10px;
-  color: #666;
-}
+
 
 /* Print */
 @media print {
@@ -94,21 +93,26 @@ a {
     display: none !important; 
   }
   
-  .layout { 
+  .layout {
     display: block !important;
     height: auto !important;
   }
-  
-  .preview { 
+
+  .preview-container {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .preview {
     padding: 0 !important;
     height: auto !important;
     background: none !important;
   }
   
-  .preview-paper { 
+  .preview-paper {
     width: 210mm !important;
     height: 297mm !important;
-    padding: 25mm !important;
+    padding: 25mm 25mm 35mm !important;
     margin: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
