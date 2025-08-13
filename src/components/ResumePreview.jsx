@@ -20,6 +20,7 @@ const getOuterHeight = (node) => {
 
 const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
   const measureRef = useRef(null);
+  const containerRef = useRef(null);
   const [pages, setPages] = useState([]);
 
   useEffect(() => {
@@ -85,12 +86,17 @@ const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
 
     pushPage();
 
-    // Convert page nodes to HTML strings
     const htmlPages = newPages.map((nodes) =>
       nodes.map((n) => n.outerHTML).join('')
     );
 
     setPages(htmlPages);
+
+    if (containerRef.current) {
+      containerRef.current.classList.add('flash');
+      setTimeout(() => containerRef.current && containerRef.current.classList.remove('flash'), 300);
+    }
+
   }, [data]);
 
   return (
@@ -100,7 +106,7 @@ const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
         <Resume data={data} />
       </div>
 
-      <div className="preview-container" ref={ref}>
+      <div className="preview-container" ref={(el) => { containerRef.current = el; if (typeof ref === 'function') ref(el); else if (ref) ref.current = el; }}>
         {pages.map((html, i) => (
           <div
             key={i}
