@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import Groq from 'groq-sdk';
 import '../styles/ai-suggestions.css';
+import BeforeAfterSlider from './BeforeAfterSlider';
 
 function AiSuggestions({ resumeData, onSuggestionReceived }) {
   const [suggestions, setSuggestions] = useState(null);
@@ -115,9 +116,9 @@ RESUME CONTENT:
 ${resumeContent}
 `.trim();
 
-      let res;
+      let text;
       try {
-        res = await groq.chat.completions.create(
+        const res = await groq.chat.completions.create(
           {
             model: "llama-3.3-70b-versatile",
             messages: [
@@ -133,22 +134,18 @@ ${resumeContent}
           },
           { signal: abortControllerRef.current?.signal }
         );
+        text = res?.choices?.[0]?.message?.content ?? "";
       } catch (apiErr) {
-        // If Groq returns json_validate_failed, show the raw generation to help fix prompt
+        // If Groq returns json_validate_failed, attempt to salvage the raw generation
         const fail = apiErr?.error?.failed_generation;
         if (fail) {
-          setError(
-            "Model returned malformed JSON. Showing raw output so you can inspect:\n\n" +
-            fail
-          );
+          text = fail; // continue to parsing below
         } else {
           setError(apiErr.message || "Request failed.");
+          setIsLoading(false);
+          return;
         }
-        setIsLoading(false);
-        return;
       }
-
-      const text = res?.choices?.[0]?.message?.content ?? "";
 
       // --- Robust parse with a tiny repair fallback ---
       const parsed = safeParseJson(text);
@@ -306,8 +303,7 @@ ${resumeContent}
               <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
                 <button className="remove-btn" onClick={() => triggerRemove('experiences', item.key)}>×</button>
                 {item.context && <h5>{item.context}</h5>}
-                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
-                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <BeforeAfterSlider before={item.old} after={item.improved} />
                 <div className="row gap-s">
                   <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
                   <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
@@ -318,8 +314,7 @@ ${resumeContent}
               <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
                 <button className="remove-btn" onClick={() => triggerRemove('projects', item.key)}>×</button>
                 {item.context && <h5>{item.context}</h5>}
-                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
-                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <BeforeAfterSlider before={item.old} after={item.improved} />
                 <div className="row gap-s">
                   <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
                   <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
