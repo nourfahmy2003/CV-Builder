@@ -81,7 +81,7 @@ function App() {
                 type="checkbox"
                 name="showWebsite"
                 checked={data.showWebsite}
-                onChange={(e) => setData(prev => ({ ...prev, showWebsite: e.target.checked }))}
+                onChange={handleChange}
               />
               Include Website
             </label>
@@ -102,7 +102,7 @@ function App() {
                 type="checkbox"
                 name="showGithub"
                 checked={data.showGithub}
-                onChange={(e) => setData(prev => ({ ...prev, showGithub: e.target.checked }))}
+                onChange={handleChange}
               />
               Include GitHub
             </label>
@@ -117,14 +117,39 @@ function App() {
             )}
           </div>
 
-          <label>
-            Summary
-            <textarea name="summary" value={data.summary} onChange={handleChange} rows={4} />
-          </label>
+          <div className="input-group summary-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                name="showSummary"
+                checked={data.showSummary}
+                onChange={handleChange}
+              />
+              Include Summary
+            </label>
+            {data.showSummary && (
+              <textarea
+                name="summary"
+                value={data.summary}
+                onChange={handleChange}
+                rows={4}
+                placeholder="A brief summary about yourself"
+              />
+            )}
+          </div>
 
 
           <div className="card">
             <h3>Education</h3>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                name="showGpa"
+                checked={data.showGpa}
+                onChange={handleChange}
+              />
+              Include GPA
+            </label>
             <EducationForm data={data} setData={setData} removeEducation={removeEducation} />
             <button type="button" className="btn" onClick={addEducation}>Add Education</button>
           </div>
@@ -150,7 +175,7 @@ function App() {
           <ResumeImprover resumeData={data} setData={setData} />
         </>
       }
-      preview={<div ref={printRef} className="preview-paper"><Resume data={data} /></div>}
+      preview={<div className="preview-container" ref={printRef}><div className="preview-paper"><Resume data={data} /></div></div>}
     />
   );
 }

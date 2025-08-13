@@ -14,8 +14,11 @@ export const useResumeData = () => {
   }, [data]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   const handleReset = () => {
@@ -36,7 +39,7 @@ export const useResumeData = () => {
       ...prev.educations,
       institutions: [
         ...prev.educations.institutions,
-        { id: uuidv4(), institution: '', program: '', startDate: '', endDate: '' },
+        { id: uuidv4(), institution: '', program: '', startDate: '', endDate: '', gpa: '', coursework: '' },
       ],
     },
   }));

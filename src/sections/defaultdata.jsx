@@ -1,116 +1,94 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const defaultData = {
-    firstname: 'Alex',
-    lastname: 'John',
-    email: 'alex.john@email.com',
-    phone: '(555) 123-4567',
-    website: 'alexjohn.dev',
+    firstname: 'NOURELDEEN',
+    lastname: 'FAHMY',
+    location: 'St. Johns’s, NL, Canada',
+    phone: '+1 709-764-5946',
+    email: 'nourfahmy2003@gmail.com',
+    website: 'https://nourfahmy2003.github.io/Resume.github.io/',
     showWebsite: true,
-    github: 'github.com/alexjohn-dev',
+    linkedin: 'http://www.linkedin.com/in/nefahmy/',
+    github: 'http://github.com/nourfahmy2003',
     showGithub: true,
-    linkedin: 'linkedin.com/in/alexjohn-dev',
-    summary: `Innovative Full Stack Developer with 3+ years of experience building scalable web applications 
-    and microservices. Passionate about creating efficient, user-friendly solutions using modern technologies. 
-    Proven track record of improving application performance and implementing best practices in software development. 
-    Strong collaboration skills and experience working in agile environments.`,
+    showSummary: true,
+    showGpa: true,
+    summary: 'A highly motivated and results-oriented Computer Science student with a passion for developing innovative solutions. Experienced in full-stack development, data science, and machine learning. Proven ability to lead teams and deliver high-quality projects on time.',
     educations: {
       institutions: [
         {
           id: uuidv4(),
-          institution: 'University of Technology',
-          program: 'Bachelor of Science in Computer Science',
-          startDate: 'September 2019',
-          endDate: 'May 2023',
-        },
-        {
-          id: uuidv4(),
-          institution: 'Tech Academy Bootcamp',
-          program: 'Advanced Web Development',
-          startDate: 'June 2022',
-          endDate: 'December 2022',
+          institution: 'Memorial University of Newfoundland',
+          program: 'Bachelor of Science, Computer Science (Honours)',
+          endDate: 'May 2025',
+          gpa: '3.6',
+          coursework: 'Algorithmic Techniques for AI, Data Prep Techniques, Intro to Data Mining, Web Programming, Software Dev.'
         }
+      ],
+    },
+    skills: {
+      skill: [
+        { id: uuidv4(), skll: 'Languages: Java, Python, JavaScript, SQL, HTML' },
+        { id: uuidv4(), skll: 'Frameworks & Libraries: React, Node.js, MongoDB, Pandas, NumPy' }
       ],
     },
     experiences: {
       jobs: [
         {
           id: uuidv4(),
-          company: 'TechCorp Solutions',
-          title: 'Full Stack Developer',
-          location: 'San Francisco, CA',
+          company: 'Storelx (https://storelx.com)',
+          location: 'NL, Canada',
+          title: 'Lead developer',
           startDate: 'January 2023',
           endDate: 'Present',
           description: [
-            'Led development of a microservices-based e-commerce platform serving 50,000+ daily users',
-            'Improved application performance by 40% through implementation of Redis caching and API optimization',
-            'Developed and maintained CI/CD pipelines using GitHub Actions, reducing deployment time by 60%',
-            'Mentored 3 junior developers and conducted weekly code reviews to ensure code quality'
+            'Led the development of a P2P storage marketplace platform using Node.js and React, serving 100+ active users.',
+            'Designed and implemented a scalable microservices architecture using Express.js, reducing API response time by 40%',
+            'Designed and optimized MongoDB schemas, resulting in 30% faster query performance',
+            'Led a team of 3 developers using Agile methodology, achieving 95% on-time sprint completion rate'
           ],
         },
         {
           id: uuidv4(),
-          company: 'InnovateTech Startup',
-          title: 'Frontend Developer',
-          location: 'Austin, TX',
-          startDate: 'June 2022',
-          endDate: 'December 2022',
+          company: 'Union Group FZCO',
+          location: 'Dubai, UAE',
+          title: 'Data Science Intern',
+          startDate: 'April 2023',
+          endDate: 'August 2023',
           description: [
-            'Built responsive web applications using React.js and TypeScript, serving 10,000+ users',
-            'Implemented state management using Redux, resulting in 30% improved component reusability',
-            'Created reusable UI component library reducing development time by 25%',
-            'Collaborated with UX team to implement responsive designs and improve user experience'
+            'Developed pipelines using Python and Pandas, processing 20k+ daily transactions with 99.9% accuracy',
+            'Created predictive models using scikit-learn, achieving 85% accuracy in sales forecasting',
+            'Built interactive dashboards using Plotly and Dash, reducing report generation time by 75%'
           ],
         },
         {
           id: uuidv4(),
-          company: 'Digital Solutions Inc.',
-          title: 'Software Engineering Intern',
-          location: 'Seattle, WA',
-          startDate: 'May 2021',
-          endDate: 'August 2021',
+          company: 'Hoopoe Digital',
+          location: 'Cairo, Egypt',
+          title: 'Full Stack Intern',
+          startDate: 'July 2022',
+          endDate: 'October 2022',
           description: [
-            'Developed RESTful APIs using Node.js and Express, handling 1000+ requests per minute',
-            'Implemented automated testing using Jest, achieving 90% code coverage',
-            'Optimized database queries resulting in 50% faster response times',
-            'Participated in daily stand-ups and sprint planning meetings in an agile environment'
+            'Developed a customer tracking application serving 5+ shopping malls and processing 20K+ daily visitors',
+            'Built RESTful APIs using Node.js and Express, handling 1000+ requests per minute with 99.9% uptime',
+            'Implemented real-time analytics dashboard using React and D3.js, processing 10k+ daily data points',
+            'Contributed to microservices architecture design, improving system scalability by 40%'
           ],
-        }
-      ],
-    },
-    skills: {
-      skill: [
-        {
-          id: uuidv4(),
-          skll: 'Frontend: React.js, TypeScript, Redux, HTML5/CSS3',
         },
         {
           id: uuidv4(),
-          skll: 'Backend: Node.js, Express, Python, Django',
-        },
-        {
-          id: uuidv4(),
-          skll: 'Database: MongoDB, PostgreSQL, Redis',
-        },
-        {
-          id: uuidv4(),
-          skll: 'Cloud: AWS, Docker, Kubernetes',
-        },
-        {
-          id: uuidv4(),
-          skll: 'Testing: Jest, Cypress, PyTest',
-        },
-        {
-          id: uuidv4(),
-          skll: 'CI/CD: GitHub Actions, Jenkins',
-        },
-        {
-          id: uuidv4(),
-          skll: 'Agile Methodologies & Scrum',
-        },
-        {
-          id: uuidv4(),
-          skll: 'Version Control: Git, GitHub',
+          company: 'Union Group',
+          location: 'Cairo, Egypt',
+          title: 'Data Science Intern',
+          startDate: 'April 2022',
+          endDate: 'July 2022',
+          description: [
+            'Analyzed 5+ years of financial data using Python and SQL, identifying patterns that led to 15% cost reduction',
+            'Created automated data cleaning pipelines processing 10k+ records daily with 99% accuracy',
+            'Developed interactive Power BI dashboards viewed by 50+ stakeholders daily',
+            'Implemented statistical analysis methods resulting in 25% more accurate financial forecasting',
+            'Documented 20+ technical processes, reducing onboarding time for new team members by 50%'
+          ],
         }
       ],
     },
@@ -118,32 +96,25 @@ export const defaultData = {
       project: [
         {
           id: uuidv4(),
-          projname: 'AI-Powered Task Manager',
+          projname: 'Memory Game (https://card-memory-game-gold.vercel.app/)',
+          location: 'NL, Canada',
+          date: 'May 2024',
           description: [
-            'Built a full-stack task management application using React, Node.js, and MongoDB',
-            'Implemented machine learning algorithms for smart task prioritization',
-            'Integrated OpenAI API for automated task categorization and time estimation',
-            'Deployed application using Docker and AWS, serving 1000+ active users'
+            'Developed an interactive web-based memory game using React and Vite',
+            'Implemented game logic and state management using React hooks',
+            'Optimized performance and deployed on Vercel with CI/CD pipeline'
           ],
         },
         {
           id: uuidv4(),
-          projname: 'Real-time Collaboration Platform',
+          projname: 'CV Maker (https://cv-builder-noureldeen.vercel.app/)',
+          location: 'NL, Canada',
+          date: 'April 2024',
           description: [
-            'Developed a real-time collaboration tool using Socket.io and React',
-            'Implemented WebRTC for peer-to-peer video conferencing',
-            'Created a custom state management solution for real-time updates',
-            'Achieved 99.9% uptime through robust error handling and fallback mechanisms'
-          ],
-        },
-        {
-          id: uuidv4(),
-          projname: 'E-commerce Analytics Dashboard',
-          description: [
-            'Designed and built a real-time analytics dashboard using React and D3.js',
-            'Integrated multiple data sources using GraphQL and REST APIs',
-            'Implemented responsive visualizations for key business metrics',
-            'Reduced data processing time by 60% through efficient caching strategies'
+            'Developed a full-stack resume builder with PDF export functionality using react-pdf, supporting multiple template designs',
+            'Created drag-and-drop interface using react-beautiful-dnd for section reordering',
+            'Achieved 40% faster render time through React optimization techniques',
+            'Implemented auto-save feature, preventing data loss and improving user experience'
           ],
         }
       ],

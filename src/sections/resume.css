@@ -1,118 +1,63 @@
-/* General container settings for A4-like width */
-.resume-container {
-  width: 210mm; /* A4 paper width */
-  min-height: 297mm; /* A4 paper height */
-  padding: 20mm; /* Adds space within the document */
-  margin: 0 auto; /* Centers the container */
-  border: 1px solid #ccc; /* Optional border */
-  background: white; /* White background for printing */
-  box-sizing: border-box;
-  page-break-after: always;
-  position: relative;
-}
-
-/* Add page numbers */
-.resume-container::after {
-  content: counter(page);
-  counter-increment: page;
-  position: absolute;
-  bottom: 10mm;
-  right: 10mm;
-  font-size: 12px;
-  color: #666;
-}
-
-@media print {
-  .resume-container {
-    margin: 0;
-    border: none;
-    page-break-after: always;
-    page-break-inside: avoid;
-  }
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    line-height: 1.15;
 }
 
 .top {
-  padding: 0 0 20px 0;
-  border-bottom: 2px solid #000;
-  text-align: center;
-  page-break-after: avoid;
-  page-break-inside: avoid;
+    text-align: center;
+    margin-bottom: 1em;
 }
 
 .Name {
-  font-size: 32px;
-  text-align: center;
-  font-weight: bolder;
-}
-
-/* Styling for personal information */
-.line {
-  font-weight: bold; /* Make it bold for emphasis */
-  text-align: center; /* Center the content */
-  display: grid;
-  grid-template-columns: repeat(3, auto); /* Three equal columns */
-  gap: 10px; /* Space between columns */
-}
-
-.linetwo {
-  font-weight: bold; /* Make it bold for emphasis */
-  text-align: center; /* Center the content */
-  display: grid;
-  grid-template-columns: repeat(2, auto); /* Two equal columns */
-  gap: 10px; /* Space between columns */
-}
-
-.Summary {
-  height: auto;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-}
-
-h3 {
-  font-size: 20px; /* Adjust font size for headings */
-  border-bottom: 1px solid #000; /* Lighter border */
-  padding-bottom: 5px; /* Space below heading */
-  font-weight: bolder;
-}
-
-/* Experience and education sections */
-.Experiences {
-  margin-bottom: 15px;
-  float: left;
-  width: 60%;
-  page-break-inside: avoid;
-}
-
-.Education {
-  margin-bottom: 15px;
-  float: right;
-  width: 30%;
-  page-break-inside: avoid;
-}
-
-.Projects {
-  margin-bottom: 15px;
-  float: left;
-  width: 60%;
-}
-
-.Skills {
-  margin-bottom: 15px;
-  float: right;
-  width: 30%;
-}
-
-.jobTitle,
-.eduprogram {
-  font-weight: bold;
-}
-
-.proj {
-  padding: 10px;
-}
-
-.projname{
+    font-size: 18pt;
     font-weight: bold;
+    margin: 0;
+}
+
+.contact-info {
+    font-size: 10pt;
+}
+
+.contact-info a {
+    color: #0000EE;
+    text-decoration: none;
+}
+
+.section {
+    margin-bottom: 1em;
+}
+
+.section-title {
+    font-size: 11pt;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    padding-bottom: 2px;
+    margin-bottom: 0.5em;
+}
+
+.education-item, .experience-item, .project-item {
+    margin-bottom: 0.5em;
+}
+
+.education-header, .experience-header, .project-header, .education-details, .experience-details, .project-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.institution, .company, .project-name, .program, .title, .project-type {
+    font-weight: bold;
+}
+
+.job-description, .project-description {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+.skills-list {
+    columns: 2;
+}
+
+.skill-item {
+    margin: 0;
 }

@@ -1,11 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lora:wght@400&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Color Palette */
+  --base-color: #1A202C; /* Deep Navy */
+  --accent-color: #008080; /* Teal */
+  --text-color: #E2E8F0;
+  --card-bg: #2D3748;
+  --border-color: #4A5568;
+  --subtle-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  /* Typography */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lora', serif;
+
+  font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--text-color);
+  background-color: var(--base-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

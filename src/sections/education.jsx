@@ -47,6 +47,16 @@ function EducationForm({ data, setData, removeEducation }) {
               />
             </label>
           </div>
+          <div className="input-group">
+            <label>
+              GPA:
+              <input
+                type="text"
+                value={val.gpa}
+                onChange={(e) => handleducationChange(index, 'gpa', e.target.value)}
+              />
+            </label>
+          </div>
           <div className="dates-group">
             <label className='startdate'>
               Start Date:

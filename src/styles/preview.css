@@ -1,17 +1,24 @@
 /* Preview Styles */
 
+.preview-container {
+    overflow-y: auto;
+    height: 100vh;
+}
+
 .preview {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px;
   background: #f0f2f5;
-  overflow-y: auto;
   overflow-x: hidden;
   gap: 40px; /* Space between pages */
-  height: 100vh;
   box-sizing: border-box;
   counter-reset: page; /* Initialize page counter */
+}
+
+a {
+    color: black;
 }
 
 .preview-paper { 
