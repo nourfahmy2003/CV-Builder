@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import Groq from 'groq-sdk';
 import '../styles/ai-suggestions.css';
+import BeforeAfterSlider from './BeforeAfterSlider';
 
 function AiSuggestions({ resumeData, onSuggestionReceived }) {
   const [suggestions, setSuggestions] = useState(null);
@@ -306,8 +307,7 @@ ${resumeContent}
               <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
                 <button className="remove-btn" onClick={() => triggerRemove('experiences', item.key)}>×</button>
                 {item.context && <h5>{item.context}</h5>}
-                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
-                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <BeforeAfterSlider before={item.old} after={item.improved} />
                 <div className="row gap-s">
                   <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
                   <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
@@ -318,8 +318,7 @@ ${resumeContent}
               <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
                 <button className="remove-btn" onClick={() => triggerRemove('projects', item.key)}>×</button>
                 {item.context && <h5>{item.context}</h5>}
-                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
-                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <BeforeAfterSlider before={item.old} after={item.improved} />
                 <div className="row gap-s">
                   <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
                   <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
