@@ -1,5 +1,5 @@
-import React from 'react';
 import AiSuggestions from './AiSuggestions';
+import { v4 as uuidv4 } from 'uuid';
 
 function ResumeImprover({ resumeData, setData }) {
   const handleSuggestionReceived = (suggestion) => {
@@ -26,6 +26,14 @@ function ResumeImprover({ resumeData, setData }) {
                 ? { ...proj, description: [...proj.description, suggestion.new] }
                 : proj
             ),
+          },
+        }));
+      } else if (suggestion.section === 'skills') {
+        setData(prev => ({
+          ...prev,
+          skills: {
+            ...prev.skills,
+            skill: [...prev.skills.skill, { id: uuidv4(), skll: suggestion.new }],
           },
         }));
       }
@@ -61,6 +69,16 @@ function ResumeImprover({ resumeData, setData }) {
                     ),
                   }
                 : proj
+            ),
+          },
+        }));
+      } else if (suggestion.section === 'skills') {
+        setData(prev => ({
+          ...prev,
+          skills: {
+            ...prev.skills,
+            skill: prev.skills.skill.map(s =>
+              s.skll === suggestion.old ? { ...s, skll: suggestion.new } : s
             ),
           },
         }));

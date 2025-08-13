@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Groq from 'groq-sdk';
 import '../styles/ai-suggestions.css';
 
 function AiSuggestions({ resumeData, onSuggestionReceived }) {
-  const [suggestion, setSuggestion] = useState(null);
+  const [suggestions, setSuggestions] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const abortControllerRef = useRef(null);
@@ -39,7 +39,7 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
 
   async function generateImprovedContent() {
     setIsLoading(true);
-    setSuggestion(null);
+    setSuggestions(null);
     setError(null);
 
     // Abort controller
@@ -158,8 +158,49 @@ ${resumeContent}
         return;
       }
 
-      setSuggestion(parsed);
-      onSuggestionReceived?.(parsed);
+      const expItems = parsed.experiences?.flatMap(exp =>
+        exp.items.map((item, index) => ({
+          key: `exp-${exp.id}-${index}`,
+          section: 'experiences',
+          parentId: exp.id,
+          context: exp.title,
+          old: item.old,
+          improved: item.improved,
+          removing: false,
+        }))
+      ) || [];
+      const projItems = parsed.projects?.flatMap(proj =>
+        proj.items.map((item, index) => ({
+          key: `proj-${proj.id}-${index}`,
+          section: 'projects',
+          parentId: proj.id,
+          context: proj.title,
+          old: item.old,
+          improved: item.improved,
+          removing: false,
+        }))
+      ) || [];
+      const skillItems = [
+        ...(parsed.skills?.add?.map((skill, index) => ({
+          key: `skill-add-${index}`,
+          section: 'skills',
+          old: '',
+          improved: skill,
+          removing: false,
+        })) || []),
+        ...(parsed.skills?.replace?.map((skill, index) => ({
+          key: `skill-replace-${index}`,
+          section: 'skills',
+          old: skill.old,
+          improved: skill.improved,
+          removing: false,
+        })) || []),
+      ];
+      setSuggestions({
+        experiences: expItems,
+        projects: projItems,
+        skills: skillItems,
+      });
     } catch (err) {
       if (err.name !== "AbortError") {
         setError(err.message || "Failed to generate improvements.");
@@ -189,6 +230,38 @@ ${resumeContent}
     }
   }
 
+  const triggerRemove = (category, key) => {
+    setSuggestions(prev => {
+      if (!prev) return prev;
+      const updated = {
+        ...prev,
+        [category]: prev[category].map(item =>
+          item.key === key ? { ...item, removing: true } : item
+        ),
+      };
+      setTimeout(() => {
+        setSuggestions(curr => {
+          if (!curr) return curr;
+          return {
+            ...curr,
+            [category]: curr[category].filter(item => item.key !== key),
+          };
+        });
+      }, 200);
+      return updated;
+    });
+  };
+
+  const handleAction = (action, item) => {
+    onSuggestionReceived({
+      type: action,
+      section: item.section,
+      id: item.parentId,
+      old: item.old,
+      new: item.improved,
+    });
+    triggerRemove(item.section, item.key);
+  };
 
   const handleCancel = () => {
     if (abortControllerRef.current) {
@@ -227,64 +300,58 @@ ${resumeContent}
 
         {error && <div className="error">{error}</div>}
 
-        {suggestion && !isLoading && (
+        {suggestions && !isLoading && (
           <div className="suggestion-content">
-            {suggestion.experiences?.map(exp => (
-              <div key={exp.id}>
-                <h4>{exp.title}</h4>
-                {exp.items.map((item, index) => (
-                  <div key={index} className="suggestion-item">
-                    <p><strong>Old:</strong> {item.old}</p>
-                    <p><strong>Improved:</strong> {item.improved}</p>
+            {suggestions.experiences.map(item => (
+              <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
+                <button className="remove-btn" onClick={() => triggerRemove('experiences', item.key)}>×</button>
+                {item.context && <h5>{item.context}</h5>}
+                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
+                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <div className="row gap-s">
+                  <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
+                  <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
+                </div>
+              </div>
+            ))}
+            {suggestions.projects.map(item => (
+              <div key={item.key} className={`suggestion-card ${item.removing ? 'fade-out' : ''}`}>
+                <button className="remove-btn" onClick={() => triggerRemove('projects', item.key)}>×</button>
+                {item.context && <h5>{item.context}</h5>}
+                {item.old && <p className="old"><strong>Old:</strong> {item.old}</p>}
+                <p className="improved"><strong>Improved:</strong> {item.improved}</p>
+                <div className="row gap-s">
+                  <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
+                  <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
+                </div>
+              </div>
+            ))}
+            {suggestions.skills.length > 0 && (
+              <div className="skill-suggestions">
+                {suggestions.skills.map(item => (
+                  <div key={item.key} className={`skill-chip ${item.removing ? 'fade-out' : ''}`}>
+                    <button className="remove-btn" onClick={() => triggerRemove('skills', item.key)}>×</button>
+                    {item.old ? (
+                      <span><strong>{item.old}</strong> → {item.improved}</span>
+                    ) : (
+                      <span>{item.improved}</span>
+                    )}
                     <div className="row gap-s">
-                      <button className="btn" onClick={() => onSuggestionReceived({ type: 'replace', section: 'experiences', id: exp.id, old: item.old, new: item.improved })}>Replace</button>
-                      <button className="btn" onClick={() => onSuggestionReceived({ type: 'add', section: 'experiences', id: exp.id, new: item.improved })}>Add</button>
+                      {item.old && (
+                        <button className="btn" onClick={() => handleAction('replace', item)}>Replace</button>
+                      )}
+                      <button className="btn" onClick={() => handleAction('add', item)}>Add</button>
                     </div>
                   </div>
                 ))}
-              </div>
-            ))}
-            {suggestion.projects?.map(proj => (
-              <div key={proj.id}>
-                <h4>{proj.title}</h4>
-                {proj.items.map((item, index) => (
-                  <div key={index} className="suggestion-item">
-                    <p><strong>Old:</strong> {item.old}</p>
-                    <p><strong>Improved:</strong> {item.improved}</p>
-                    <div className="row gap-s">
-                      <button className="btn" onClick={() => onSuggestionReceived({ type: 'replace', section: 'projects', id: proj.id, old: item.old, new: item.improved })}>Replace</button>
-                      <button className="btn" onClick={() => onSuggestionReceived({ type: 'add', section: 'projects', id: proj.id, new: item.improved })}>Add</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-            {suggestion.skills?.add?.length > 0 && (
-              <div>
-                <h4>Skills to Add</h4>
-                <ul>
-                  {suggestion.skills.add.map((skill, index) => (
-                    <li key={index}>{skill}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {suggestion.skills?.replace?.length > 0 && (
-              <div>
-                <h4>Skills to Replace</h4>
-                <ul>
-                  {suggestion.skills.replace.map((skill, index) => (
-                    <li key={index}><strong>Old:</strong> {skill.old}, <strong>New:</strong> {skill.improved}</li>
-                  ))}
-                </ul>
               </div>
             )}
           </div>
         )}
 
-        {!isLoading && !error && !suggestion && (
+        {!isLoading && !error && !suggestions && (
           <p className="hint">
-            Click "Generate Improvements" to get AI-powered suggestions for your projects,
+            Click &quot;Generate Improvements&quot; to get AI-powered suggestions for your projects,
             experience descriptions, and recommended skills to add to your resume.
           </p>
         )}
