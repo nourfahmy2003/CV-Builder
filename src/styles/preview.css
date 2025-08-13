@@ -1,6 +1,6 @@
 /* Preview Styles */
 
-.preview { 
+.preview {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,7 +9,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   gap: 40px; /* Space between pages */
-  min-height: 100%;
+  height: 100vh;
   box-sizing: border-box;
   counter-reset: page; /* Initialize page counter */
 }
