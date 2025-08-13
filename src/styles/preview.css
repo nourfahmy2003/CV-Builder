@@ -3,8 +3,24 @@
 .preview-container {
     overflow-y: auto;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    counter-reset: page; /* Initialize page counter */
 }
 
+.preview-measure {
+  position: absolute;
+  visibility: hidden;
+  top: 0;
+  left: -9999px;
+  width: 210mm;
+  padding: 25mm 25mm 35mm;
+  box-sizing: border-box;
+}
+
+/* legacy container retained for layout wrappers */
 .preview {
   display: flex;
   flex-direction: column;
@@ -14,7 +30,6 @@
   overflow-x: hidden;
   gap: 40px; /* Space between pages */
   box-sizing: border-box;
-  counter-reset: page; /* Initialize page counter */
 }
 
 a {
@@ -24,7 +39,7 @@ a {
 .preview-paper {
   width: 210mm;
   height: 297mm;
-  padding: 25mm 25mm;
+  padding: 25mm 25mm 35mm;
   background: #fff;
   color: #111;
   border-radius: 12px;
@@ -32,8 +47,14 @@ a {
   position: relative;
   overflow: visible;
   page-break-after: always;
+  break-after: page;
   box-sizing: border-box;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.preview-paper:last-child {
+  page-break-after: avoid;
+  break-after: avoid;
 }
 
 .preview-paper:hover {
@@ -43,7 +64,8 @@ a {
 
 /* Page number indicator */
 .preview-paper::after {
-  content: "Page " attr(data-page) " / " attr(data-total);
+  counter-increment: page;
+  content: 'Page ' counter(page) ' of ' attr(data-total);
   position: absolute;
   bottom: 10mm;
   right: 10mm;
@@ -72,18 +94,9 @@ a {
 }
 
 /* Additional page styling */
-.preview-paper:not(:first-child) {
-  margin-top: -20px; /* Overlap to show connection between pages */
-}
+/* Gap on container handles spacing between pages */
 
-.preview-paper:not(:last-child)::after {
-  content: "Page " attr(data-page) " / " attr(data-total);
-  position: absolute;
-  bottom: 10mm;
-  right: 10mm;
-  font-size: 10px;
-  color: #666;
-}
+
 
 /* Print */
 @media print {
@@ -101,24 +114,46 @@ a {
     display: none !important; 
   }
   
-  .layout { 
+  .layout {
     display: block !important;
     height: auto !important;
   }
-  
-  .preview { 
+
+  .preview-container {
+    overflow: visible !important;
+    height: auto !important;
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  .preview {
     padding: 0 !important;
     height: auto !important;
     background: none !important;
   }
-  
-  .preview-paper { 
+
+  .preview-paper {
     width: 210mm !important;
     height: 297mm !important;
-    padding: 25mm !important;
+    padding: 25mm 25mm 35mm !important;
     margin: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
     position: relative !important;
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  .preview-paper:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .preview-measure {
+    display: none !important;
+  }
+
+  .preview-paper::after {
+    content: none !important;
   }
 }

@@ -809,22 +809,6 @@ textarea {
   border-bottom-right-radius: 50%;
 }
 
-/* Page number indicator */
-.preview-paper::after {
-  content: 'Page ' counter(page);
-  position: absolute;
-  bottom: 10mm;
-  right: 10mm;
-  font-size: 10px;
-  color: #666;
-  counter-increment: page;
-}
-
-/* Initialize page counter */
-.preview {
-  counter-reset: page;
-}
-
 /* Page break indicator */
 .preview-paper[style*="height: 297mm"]:not(:last-child)::before {
   content: '';
