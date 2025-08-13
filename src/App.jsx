@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import './App.css';
 
 // Forms
 import ExperienceForm from './sections/experiences';
 import EducationForm from './sections/education';
-import Resume from './sections/resume';
+import ResumePreview from './components/ResumePreview';
 import SkillForm from './sections/skills';
 import ProjectForm from './sections/projects';
 
@@ -175,7 +175,7 @@ function App() {
           <ResumeImprover resumeData={data} setData={setData} />
         </>
       }
-      preview={<div className="preview-container" ref={printRef}><div className="preview-paper"><Resume data={data} /></div></div>}
+      preview={<ResumePreview ref={printRef} data={data} />}
     />
   );
 }
