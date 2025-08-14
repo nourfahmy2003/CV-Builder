@@ -36,6 +36,13 @@ function ResumeImprover({ resumeData, setData }) {
             skill: [...prev.skills.skill, { id: uuidv4(), skll: suggestion.new }],
           },
         }));
+      } else if (suggestion.section === 'summary') {
+        setData(prev => ({
+          ...prev,
+          summary: prev.summary
+            ? `${prev.summary} ${suggestion.new}`
+            : suggestion.new,
+        }));
       }
     } else if (suggestion.type === 'replace') {
       if (suggestion.section === 'experiences') {
@@ -81,6 +88,11 @@ function ResumeImprover({ resumeData, setData }) {
               s.skll === suggestion.old ? { ...s, skll: suggestion.new } : s
             ),
           },
+        }));
+      } else if (suggestion.section === 'summary') {
+        setData(prev => ({
+          ...prev,
+          summary: suggestion.new,
         }));
       }
     }
