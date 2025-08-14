@@ -17,8 +17,10 @@ import ResumeImprover from './components/ResumeImprover';
 
 // Hooks
 import { useResumeData } from './hooks/useResumeData';
+import { useTheme } from './hooks/useTheme';
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const {
     data,
     setData,
@@ -43,15 +45,18 @@ function App() {
   });
 
   return (
-    <SidebarLayout
-      topbar={
-        <TopBar
-          onPrint={handlePrint}
-          onReset={handleReset}
-          onDefault={handleDefault}
-        />
-      }
-      sidebar={
+    <div className={`app theme-${theme}`}>
+      <SidebarLayout
+        topbar={
+          <TopBar
+            onPrint={handlePrint}
+            onReset={handleReset}
+            onDefault={handleDefault}
+            onToggleTheme={toggleTheme}
+            theme={theme}
+          />
+        }
+        sidebar={
         <>
           <div className="grid grid-2">
             <label>
@@ -192,6 +197,7 @@ function App() {
       }
       preview={<ResumePreview ref={printRef} data={data} />}
     />
+    </div>
   );
 }
 
