@@ -115,50 +115,123 @@
 
 .suggestion-card {
   position: relative;
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
-  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.suggestion-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elev-2);
+  border-color: var(--accent-color);
 }
 
 .ba-slider {
   position: relative;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--line);
   border-radius: 6px;
   overflow: hidden;
   margin: 8px 0;
+  background: var(--surface-2);
 }
 
-.ba-slider p {
-  margin: 0;
-  padding: 8px 12px;
-  line-height: 1.4;
+.ba-after,
+.ba-before {
+  position: relative;
+  min-height: 100%;
 }
 
 .ba-after {
-  background: var(--surface-color);
+  padding: 0 16px;
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  color: var(--text-primary);
 }
 
 .ba-before {
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  background: var(--accent-color);
-  color: #000;
+  bottom: 0;
+  padding: 0 16px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  will-change: clip-path;
 }
 
-.ba-slider input[type='range'] {
+.ba-slider p {
+  margin: 0;
+  line-height: 1.4;
+  padding: 12px 0;
+}
+
+
+.ba-track {
   position: absolute;
-  bottom: -12px;
-  left: 0;
-  width: 100%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--brand);
+  transform: translateX(-50%);
+  pointer-events: none;
+  will-change: left;
 }
 
-.suggestion-card:hover {
-  border-color: var(--accent-color);
+.theme-dark .ba-track {
+  background: var(--brand-tint);
+}
+
+.ba-handle {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--brand);
+  box-shadow: var(--shadow-elev-1);
+  transform: translate(-50%, -50%);
+  cursor: ew-resize;
+  touch-action: none;
+  will-change: left, transform;
+  transition: transform 0.1s ease;
+}
+
+.ba-handle:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+.ba-handle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.theme-dark .ba-handle {
+  border-color: var(--brand-tint);
+}
+
+.ba-label {
+  position: absolute;
+  top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  user-select: none;
+  pointer-events: none;
+}
+
+.ba-label.before {
+  left: 8px;
+}
+
+.ba-label.after {
+  right: 8px;
 }
 
 .skill-suggestions {
@@ -190,14 +263,14 @@
   right: 6px;
   background: transparent;
   border: none;
-  color: var(--muted-text);
+  color: var(--text-secondary);
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
 }
 
 .remove-btn:hover {
-  color: var(--text-color);
+  color: var(--accent-color);
 }
 
 .skill-chip .remove-btn {
@@ -215,5 +288,48 @@
 
 .fade-out {
   opacity: 0;
-  transform: scale(0.95);
+  transform: translateY(-8px);
+}
+
+.card-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.retry-banner {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  border: 1px solid var(--brand);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.ai-debug {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.ai-debug ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.ai-debug li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
