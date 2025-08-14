@@ -125,36 +125,95 @@
 
 .ba-slider {
   position: relative;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--line);
   border-radius: 6px;
   overflow: hidden;
   margin: 8px 0;
+  background: var(--surface-2);
 }
 
-.ba-slider p {
-  margin: 0;
-  padding: 8px 12px;
-  line-height: 1.4;
-}
-
-.ba-after {
-  background: var(--surface-color);
+.ba-after,
+.ba-before {
+  position: relative;
+  padding: 0 20px;
+  min-height: 100%;
 }
 
 .ba-before {
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  background: var(--accent-color);
-  color: #000;
+  bottom: 0;
+  color: var(--text-primary);
+  background: var(--surface-2);
 }
 
-.ba-slider input[type='range'] {
+.ba-slider p {
+  margin: 0;
+  line-height: 1.4;
+  padding: 12px 0;
+}
+
+.ba-track {
   position: absolute;
-  bottom: -12px;
-  left: 0;
-  width: 100%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--brand);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.ba-handle {
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  transform: translate(-50%, -50%);
+  cursor: ew-resize;
+  touch-action: none;
+  will-change: transform;
+}
+
+.ba-handle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-elev-1);
+  transform: translate(-50%, -50%);
+}
+
+.ba-handle:focus-visible::before {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.ba-label {
+  position: absolute;
+  top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  user-select: none;
+  pointer-events: none;
+}
+
+.ba-label.before {
+  left: 8px;
+}
+
+.ba-label.after {
+  right: 8px;
 }
 
 .suggestion-card:hover {
