@@ -274,19 +274,64 @@ button:hover {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 10;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 32px;
-  margin: -2px 0px 4px -10px;
-  background: var(--surface-color);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: var(--subtle-shadow);
+  gap: 8px;
+  padding: 12px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
 }
-.topbar h2 { font-size: 16px; font-weight: 600; letter-spacing: .2px; color: var(--text-color); margin: 0 8px; font-family: var(--font-heading); }
-.topbar .right { display: flex; gap: 8px; }
+.topbar .title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: var(--font-heading);
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar .actions {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 720px) {
+  .topbar {
+    flex-direction: row;
+    padding: 12px 20px;
+  }
+  .topbar .title {
+    text-align: left;
+  }
+  .topbar .actions {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 719px) {
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .topbar .title {
+    text-align: center;
+  }
+  .topbar .actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 .btn {
   appearance: none;
@@ -315,6 +360,7 @@ button:hover {
   border-color: var(--accent-color);
   padding: 8px 20px;
   font-weight: 600;
+  color: #fff;
   box-shadow: var(--subtle-shadow);
 }
 
@@ -324,14 +370,51 @@ button:hover {
   box-shadow: var(--elevated-shadow);
 }
 
+/* ghost button with subtle background so it stands out on the top bar */
 .btn.ghost {
-  background: var(--surface-color);
-  border-color: var(--border-color);
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--muted-text);
+}
+.btn.ghost:hover {
+  background: var(--brand-tint);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* icon-only buttons */
+.btn.icon {
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+}
+
+/* outline style for secondary actions */
+.btn.secondary {
+  background: transparent;
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.btn.secondary:hover {
+  background: var(--brand-tint);
+  box-shadow: var(--subtle-shadow);
 }
 
 .btn.ghost.active {
   border-color: var(--accent-color);
   color: var(--accent-color);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(51, 88, 255, 0.35);
+}
+
+/* spacing for buttons inside cards */
+.card > .btn {
+  margin-top: 20px;
 }
 
 .card {
@@ -397,13 +480,14 @@ button:hover {
 
 .card h4 {
   font-size: 15px;
-  color: #e5edff;
+  color: var(--muted-text);
   margin: 16px 0 12px;
   font-weight: 500;
   opacity: 0.9;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   position: relative;
 }
 
@@ -804,34 +888,4 @@ textarea {
   .preview-paper::before {
     display: none !important;
   }
-}
-
-.card h4{
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;   /* was space-between */
-  gap: 8px;                      /* space between text and X */
-}
-
-/* make sure nothing pushes it away */
-.card h4 .delete-btn{
-  margin-left: 0;                /* no auto margin pushing to the right */
-}
-
-.btn{
-  padding: 8px 12px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent-color);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.btn:hover{
-  background: var(--accent-color-hover);
-  transform: scale(1.02);
 }
