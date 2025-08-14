@@ -464,13 +464,13 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
                 >
                   ×
                 </button>
-                {item.context && <h5>{item.context}</h5>}
+                {item.context && <h5 className="card-title">{item.context}</h5>}
                 <BeforeAfterSlider before={item.old} after={item.improved} />
-                <div className="row gap-s">
-                  <button className="btn" onClick={() => handleAction('replace', item)}>
+                <div className="actions">
+                  <button className="btn primary" onClick={() => handleAction('replace', item)}>
                     Replace
                   </button>
-                  <button className="btn" onClick={() => handleAction('add', item)}>
+                  <button className="btn secondary" onClick={() => handleAction('add', item)}>
                     Add
                   </button>
                 </div>
@@ -491,13 +491,13 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
                 >
                   ×
                 </button>
-                {item.context && <h5>{item.context}</h5>}
+                {item.context && <h5 className="card-title">{item.context}</h5>}
                 <BeforeAfterSlider before={item.old} after={item.improved} />
-                <div className="row gap-s">
-                  <button className="btn" onClick={() => handleAction('replace', item)}>
+                <div className="actions">
+                  <button className="btn primary" onClick={() => handleAction('replace', item)}>
                     Replace
                   </button>
-                  <button className="btn" onClick={() => handleAction('add', item)}>
+                  <button className="btn secondary" onClick={() => handleAction('add', item)}>
                     Add
                   </button>
                 </div>
@@ -518,13 +518,13 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
                 >
                   ×
                 </button>
-                {item.context && <h5>{item.context}</h5>}
+                {item.context && <h5 className="card-title">{item.context}</h5>}
                 <BeforeAfterSlider before={item.old} after={item.improved} />
-                <div className="row gap-s">
-                  <button className="btn" onClick={() => handleAction('replace', item)}>
+                <div className="actions">
+                  <button className="btn primary" onClick={() => handleAction('replace', item)}>
                     Replace
                   </button>
-                  <button className="btn" onClick={() => handleAction('add', item)}>
+                  <button className="btn secondary" onClick={() => handleAction('add', item)}>
                     Add
                   </button>
                 </div>

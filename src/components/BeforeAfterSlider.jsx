@@ -1,24 +1,115 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import '../styles/ai-suggestions.css';
 
 export default function BeforeAfterSlider({ before = '', after = '' }) {
-  const [pos, setPos] = useState(50);
+  const containerRef = useRef(null);
+  const handleRef = useRef(null);
+  const rafRef = useRef();
+  const prevRef = useRef(50);
+  const [pos, setPos] = useState(50); // percentage
+  const [dragging, setDragging] = useState(false);
+
+  const clamp = (p, rect) => {
+    const min = (16 / rect.width) * 100;
+    const max = 100 - min;
+    let v = Math.min(Math.max(p, min), max);
+    const px = (v / 100) * rect.width;
+    const snaps = [25, 50, 75];
+    for (const s of snaps) {
+      const spx = (s / 100) * rect.width;
+      if (Math.abs(px - spx) <= 8) {
+        v = s;
+        break;
+      }
+    }
+    return v;
+  };
+
+  const updatePos = (clientX) => {
+    const rect = containerRef.current.getBoundingClientRect();
+    const pct = ((clientX - rect.left) / rect.width) * 100;
+    const clamped = clamp(pct, rect);
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => setPos(clamped));
+  };
+
+  const startDrag = (e) => {
+    e.preventDefault();
+    setDragging(true);
+    handleRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (!dragging) return;
+    const move = (e) => {
+      const clientX = e.clientX ?? e.touches?.[0]?.clientX;
+      if (clientX != null) updatePos(clientX);
+    };
+    const up = () => setDragging(false);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up, { once: true });
+    return () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+  }, [dragging]);
+
+  const handleKey = (e) => {
+    const rect = containerRef.current.getBoundingClientRect();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const step = e.shiftKey ? 10 : 5;
+      const delta = e.key === 'ArrowLeft' ? -step : step;
+      setPos((p) => clamp(p + delta, rect));
+      e.preventDefault();
+    } else if (e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      prevRef.current = pos;
+      setPos(50);
+      const restore = () => {
+        setPos(prevRef.current);
+        window.removeEventListener('keyup', restore);
+      };
+      window.addEventListener('keyup', restore);
+    }
+  };
+
+  const handleDouble = () => {
+    setPos((p) => (p < 50 ? 65 : 35));
+  };
+
   return (
-    <div className="ba-slider">
-      <div className="ba-before" style={{ width: before ? `${pos}%` : '0%' }}>
-        {before && <p>{before}</p>}
-      </div>
+    <div className="ba-slider" ref={containerRef}>
       <div className="ba-after">
+        <span className="ba-label after">IMPROVED</span>
         <p>{after}</p>
       </div>
       {before && (
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={pos}
-          onChange={(e) => setPos(e.target.value)}
-        />
+        <div
+          className="ba-before"
+          style={{ clipPath: `inset(0 calc(100% - ${pos}%) 0 0)` }}
+        >
+          <span className="ba-label before">BEFORE</span>
+          <p>{before}</p>
+        </div>
+      )}
+      {before && (
+        <>
+          <div className="ba-track" style={{ left: `${pos}%` }} />
+          <button
+            ref={handleRef}
+            className="ba-handle"
+            style={{ left: `${pos}%` }}
+            onPointerDown={startDrag}
+            onKeyDown={handleKey}
+            onDoubleClick={handleDouble}
+            role="slider"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(pos)}
+            aria-label="Comparison slider"
+            aria-valuetext={`Showing ${Math.round(pos)}% original, ${100 - Math.round(pos)}% improved`}
+          />
+        </>
       )}
     </div>
   );
