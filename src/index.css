@@ -1,34 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Source+Sans+Pro:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Source+Sans+Pro:wght@400;600&display=swap');
 
+/* Theme tokens */
 :root {
-  /* Color Palette */
-  --base-color: #0f172a; /* Deep Navy */
-  --surface-color: #1e293b; /* Card surface */
-  --accent-color: #0ea5e9; /* Teal accent */
-  --accent-color-hover: #38bdf8;
-  --text-color: #f1f5f9;
-  --muted-text: #94a3b8;
-  --card-bg: var(--surface-color);
-  --border-color: #334155;
-  --subtle-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  --elevated-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  /* semantic tokens - light theme defaults */
+  --surface: #f7f9fc;
+  --surface-2: #ffffff;
+  --line: #e5eaf2;
+  --text-primary: #1c1e21;
+  --text-secondary: #6b7280;
+  --brand: #3358ff;
+  --brand-tint: #dde5ff;
+  --success: #3bcf85;
+  --danger: #ff4d4f;
+  --focus-ring: #3358ff;
+  --shadow-elev-1: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-elev-2: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+
+  /* legacy variable mapping */
+  --base-color: var(--surface);
+  --surface-color: var(--surface-2);
+  --accent-color: var(--brand);
+  --accent-color-hover: var(--brand-tint);
+  --text-color: var(--text-primary);
+  --muted-text: var(--text-secondary);
+  --card-bg: var(--surface-2);
+  --border-color: var(--line);
+  --subtle-shadow: var(--shadow-elev-1);
+  --elevated-shadow: var(--shadow-elev-2);
 
   /* Typography */
-  --font-heading: 'Montserrat', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
   --font-body: 'Source Sans Pro', sans-serif;
 
   font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: var(--text-color);
   background-color: var(--base-color);
+  color-scheme: light;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.theme-dark {
+  --surface: #0f131a;
+  --surface-2: #0b1017;
+  --line: #1c2330;
+  --text-primary: #e9f0ff;
+  --text-secondary: #9fb3d9;
+  --brand: #3358ff;
+  --brand-tint: #223a9f;
+  --success: #37b879;
+  --danger: #ff595a;
+  --focus-ring: #6c8cff;
+  --shadow-elev-1: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-elev-2: 0 4px 8px rgba(0,0,0,0.6);
+
+  --base-color: var(--surface);
+  --surface-color: var(--surface-2);
+  --accent-color: var(--brand);
+  --accent-color-hover: var(--brand-tint);
+  --text-color: var(--text-primary);
+  --muted-text: var(--text-secondary);
+  --card-bg: var(--surface-2);
+  --border-color: var(--line);
+  --subtle-shadow: var(--shadow-elev-1);
+  --elevated-shadow: var(--shadow-elev-2);
+
+  color-scheme: dark;
+}
+
+/* explicit light class for completeness */
+.theme-light {
+  color-scheme: light;
 }
 
 a {

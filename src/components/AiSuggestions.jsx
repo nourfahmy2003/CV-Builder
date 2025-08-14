@@ -7,37 +7,12 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
   const [suggestions, setSuggestions] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [sectionErrors, setSectionErrors] = useState({
-    summary: null,
-    experiences: null,
-    projects: null,
-    skills: null,
-  });
+  const [progressStatus, setProgressStatus] = useState(null);
+  const [resultBanner, setResultBanner] = useState(null);
+  const [debugLogs, setDebugLogs] = useState([]);
+  const [showDebug, setShowDebug] = useState(false);
   const abortControllerRef = useRef(null);
 
-  const extractProjects = (data) => {
-    if (!data?.projects?.project?.length) return '';
-    let content = 'PROJECTS:\n';
-    data.projects.project.forEach((proj, i) => {
-      content += `${i + 1}. [projId=${proj.id}] ${proj.projname}\n`;
-      (proj.description || []).forEach(
-        (d) => d?.trim() && (content += `   • ${d}\n`)
-      );
-    });
-    return content.trim();
-  };
-
-  const extractExperiences = (data) => {
-    if (!data?.experiences?.jobs?.length) return '';
-    let content = 'EXPERIENCE:\n';
-    data.experiences.jobs.forEach((job, i) => {
-      content += `${i + 1}. [jobId=${job.id}] ${job.title} at ${job.company}\n`;
-      (job.description || []).forEach(
-        (d) => d?.trim() && (content += `   • ${d}\n`)
-      );
-    });
-    return content.trim();
-  };
 
   const extractSkillsSummary = (data) => {
     let content = '';
@@ -177,23 +152,12 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
     }
   };
 
-  const fetchWithRetry = async (fn, retries = 1) => {
-    let lastErr;
-    for (let i = 0; i <= retries; i++) {
-      try {
-        return await fn();
-      } catch (e) {
-        lastErr = e;
-      }
-    }
-    throw lastErr;
-  };
-
   async function generateImprovedContent() {
     setIsLoading(true);
     setSuggestions(null);
     setError(null);
-    setSectionErrors({ summary: null, experiences: null, projects: null, skills: null });
+    setResultBanner(null);
+    setProgressStatus(null);
 
     abortControllerRef.current = new AbortController();
 
@@ -202,82 +166,217 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
       dangerouslyAllowBrowser: true,
     });
 
-    const combined = {
-      summary: [],
-      projects: [],
-      experiences: [],
-      skills: { add: [], replace: [] },
-    };
-    const errors = {};
-
-    const skillsContent = extractSkillsSummary(resumeData);
-    const expContent = extractExperiences(resumeData);
-    const projContent = extractProjects(resumeData);
-
     const controller = abortControllerRef.current;
 
-    const request = async (systemPrompt, userPrompt) => {
-      const res = await groq.chat.completions.create(
-        {
-          model: 'llama-3.3-70b-versatile',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt },
-          ],
-          temperature: 0.1,
-          top_p: 1,
-          max_tokens: 800,
-          stream: false,
-          response_format: { type: 'json_object' },
-        },
-        { signal: controller.signal }
-      );
-      return res?.choices?.[0]?.message?.content ?? '';
+    const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
+    const logRequest = (log) => {
+      setDebugLogs((prev) => [...prev.slice(-2), log]);
     };
 
-    const handleSection = async (section, content) => {
-      if (!content) return;
-      const prompts = {
-        skills: `You are an expert resume assistant. Return ONLY JSON: {"summary":[{"old":"","improved":"","action":"replace"|"add"}],"skills":{"add":[""],"replace":[{"old":"","improved":""}]}}`,
-        experiences: `You are an expert resume assistant. Return ONLY JSON: {"experiences":[{"id":"","title":"","items":[{"old":"","improved":"","action":"replace"|"add"}]}]}`,
-        projects: `You are an expert resume assistant. Return ONLY JSON: {"projects":[{"id":"","title":"","items":[{"old":"","improved":"","action":"replace"|"add"}]}]}`,
-      };
-      const system = prompts[section];
-      const user = `Analyze the following content and provide suggestions.\n\n${content}`.trim();
-      let text;
+    const callGroq = async ({ mode, section, entityId, system, user }) => {
+      const requestId = crypto.randomUUID();
+      const timestamp = new Date().toISOString();
+      const inputChars = user.length;
+      const inputTokens = Math.ceil((system.length + user.length) / 4);
       try {
-        text = await fetchWithRetry(() => request(system, user));
-      } catch (e) {
-        errors[section] = e.message || 'Request failed.';
+        const res = await groq.chat.completions.create(
+          {
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              { role: 'system', content: system },
+              { role: 'user', content: user },
+            ],
+            temperature: 0.2,
+            top_p: 1,
+            max_tokens: 800,
+            stream: false,
+            response_format: { type: 'json_object' },
+          },
+          { signal: controller.signal }
+        );
+        const raw = res?.choices?.[0]?.message?.content ?? '';
+        try {
+          const parsed = JSON.parse(raw);
+          logRequest({
+            requestId,
+            timestamp,
+            mode,
+            section,
+            entityId,
+            inputChars,
+            inputTokens,
+            outputChars: raw.length,
+            snippet: raw.slice(0, 300),
+            outcome: 'parsed',
+            raw,
+          });
+          return parsed;
+        } catch (e) {
+          const repaired = safeParseJson(raw);
+          if (repaired) {
+            logRequest({
+              requestId,
+              timestamp,
+              mode,
+              section,
+              entityId,
+              inputChars,
+              inputTokens,
+              outputChars: raw.length,
+              snippet: raw.slice(0, 300),
+              outcome: 'repaired',
+              raw,
+            });
+            return repaired;
+          }
+          logRequest({
+            requestId,
+            timestamp,
+            mode,
+            section,
+            entityId,
+            inputChars,
+            inputTokens,
+            outputChars: raw.length,
+            snippet: raw.slice(0, 300),
+            error: e.message,
+            outcome: 'failed',
+            raw,
+          });
+          throw new Error('json_parse_failed');
+        }
+      } catch (err) {
+        const code = err?.response?.error?.code;
+        logRequest({
+          requestId,
+          timestamp,
+          mode,
+          section,
+          entityId,
+          inputChars,
+          inputTokens,
+          error: code ? `${code}: ${err.message}` : err.message,
+          outcome: 'failed',
+          raw: '',
+        });
+        throw err;
+      }
+    };
+
+      const retryEntity = async (fn) => {
+        for (let i = 0; i < 3; i++) {
+          try {
+            return await fn();
+          } catch (e) {
+            if (i < 2) await sleep([250, 750][i]);
+          }
+        }
+        return null;
+      };
+      const combined = {
+        summary: [],
+        projects: [],
+        experiences: [],
+        skills: { add: [], replace: [] },
+      };
+
+      const skillsContent = extractSkillsSummary(resumeData);
+      const jobs = resumeData?.experiences?.jobs || [];
+      const projects = resumeData?.projects?.project || [];
+      const total = jobs.length + projects.length + (skillsContent ? 1 : 0);
+      let success = 0;
+      let count = 0;
+
+      const BASE_SYSTEM = 'Return ONLY a valid JSON object, no prose, no markdown, no code fences.';
+
+      for (let j = 0; j < jobs.length; j++) {
+        const job = jobs[j];
+        setProgressStatus({ section: 'job', current: count + 1, total });
+        const system = `${BASE_SYSTEM} {"experiences":[{"id":"${job.id}","title":"${job.title} at ${job.company}","items":[{"old":"","improved":"","action":"replace"|"add"}]}],"projects":[],"skills":{"add":[],"replace":[]}}`;
+        const user = (job.description || [])
+          .filter((d) => d?.trim())
+          .map((d) => `• ${d}`)
+          .join('\n');
+        const parsed = await retryEntity(() =>
+          callGroq({
+            mode: 'per-job',
+            section: 'experiences',
+            entityId: job.id,
+            system,
+            user,
+          })
+        );
+        if (parsed) {
+          const cleaned = cleanParsed(parsed);
+          combined.experiences.push(...cleaned.experiences);
+          combined.skills.add.push(...cleaned.skills.add);
+          combined.skills.replace.push(...cleaned.skills.replace);
+          success++;
+        }
+        count++;
+        await sleep(120);
+      }
+
+      for (let p = 0; p < projects.length; p++) {
+        const proj = projects[p];
+        setProgressStatus({ section: 'project', current: count + 1, total });
+        const system = `${BASE_SYSTEM} {"projects":[{"id":"${proj.id}","title":"${proj.projname}","items":[{"old":"","improved":"","action":"replace"|"add"}]}],"experiences":[],"skills":{"add":[],"replace":[]}}`;
+        const user = (proj.description || [])
+          .filter((d) => d?.trim())
+          .map((d) => `• ${d}`)
+          .join('\n');
+        const parsed = await retryEntity(() =>
+          callGroq({
+            mode: 'per-project',
+            section: 'projects',
+            entityId: proj.id,
+            system,
+            user,
+          })
+        );
+        if (parsed) {
+          const cleaned = cleanParsed(parsed);
+          combined.projects.push(...cleaned.projects);
+          combined.skills.add.push(...cleaned.skills.add);
+          combined.skills.replace.push(...cleaned.skills.replace);
+          success++;
+        }
+        count++;
+        await sleep(120);
+      }
+
+      if (skillsContent) {
+        setProgressStatus({ section: 'skills', current: count + 1, total });
+        const system = `${BASE_SYSTEM} {"summary":[{"old":"","improved":"","action":"replace"|"add"}],"skills":{"add":[""],"replace":[{"old":"","improved":""}]},"experiences":[],"projects":[]}`;
+        const parsed = await retryEntity(() =>
+          callGroq({
+            mode: 'skills-only',
+            section: 'skills',
+            entityId: 'skills',
+            system,
+            user: skillsContent,
+          })
+        );
+        if (parsed) {
+          const cleaned = cleanParsed(parsed);
+          combined.summary.push(...cleaned.summary);
+          combined.skills.add.push(...cleaned.skills.add);
+          combined.skills.replace.push(...cleaned.skills.replace);
+          success++;
+        }
+        count++;
+      }
+
+      setProgressStatus(null);
+      setResultBanner({ success, total });
+      if (success === 0) {
+        setIsLoading(false);
+        setError("AI couldn't format suggestions this time. Try again.");
         return;
       }
-      const parsed = safeParseJson(text);
-      if (!parsed) return;
-      const cleaned = cleanParsed(parsed);
-      combined.summary.push(...cleaned.summary);
-      combined.projects.push(...cleaned.projects);
-      combined.experiences.push(...cleaned.experiences);
-      combined.skills.add.push(...cleaned.skills.add);
-      combined.skills.replace.push(...cleaned.skills.replace);
-    };
 
-    try {
-      await Promise.all([
-        handleSection('skills', skillsContent),
-        handleSection('experiences', expContent),
-        handleSection('projects', projContent),
-      ]);
-    } catch (err) {
-      if (err.name !== 'AbortError') {
-        setError(err.message || 'Failed to generate improvements.');
-      }
-      setIsLoading(false);
-      return;
-    }
-
-    setSectionErrors(errors);
-
-    const seenExp = new Set();
+      const seenExp = new Set();
     const expItems = [];
     combined.experiences.forEach((exp) => {
       exp.items.forEach((item, idx) => {
@@ -446,13 +545,27 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
           </div>
         )}
 
+        {progressStatus && (
+          <div className="loading">
+            <div className="spinner"></div>
+            <span>
+              Processing {progressStatus.section} ({progressStatus.current}/
+              {progressStatus.total})...
+            </span>
+          </div>
+        )}
+
         {error && <div className="error">{error}</div>}
+
+        {resultBanner && !error && (
+          <div className="retry-banner">
+            Generated suggestions for {resultBanner.success} of{' '}
+            {resultBanner.total} items.
+          </div>
+        )}
 
         {suggestions && !isLoading && (
           <div className="suggestion-content">
-            {sectionErrors.summary && (
-              <div className="error">Summary: {sectionErrors.summary}</div>
-            )}
             {suggestions.summary.map((item) => (
               <div
                 key={item.key}
@@ -464,22 +577,19 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
                 >
                   ×
                 </button>
-                {item.context && <h5>{item.context}</h5>}
+                {item.context && <h5 className="card-title">{item.context}</h5>}
                 <BeforeAfterSlider before={item.old} after={item.improved} />
-                <div className="row gap-s">
-                  <button className="btn" onClick={() => handleAction('replace', item)}>
+                <div className="actions">
+                  <button className="btn primary" onClick={() => handleAction('replace', item)}>
                     Replace
                   </button>
-                  <button className="btn" onClick={() => handleAction('add', item)}>
+                  <button className="btn secondary" onClick={() => handleAction('add', item)}>
                     Add
                   </button>
                 </div>
               </div>
             ))}
 
-            {sectionErrors.experiences && (
-              <div className="error">Experiences: {sectionErrors.experiences}</div>
-            )}
             {suggestions.experiences.map((item) => (
               <div
                 key={item.key}
@@ -491,22 +601,19 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
                 >
                   ×
                 </button>
-                {item.context && <h5>{item.context}</h5>}
+                {item.context && <h5 className="card-title">{item.context}</h5>}
                 <BeforeAfterSlider before={item.old} after={item.improved} />
-                <div className="row gap-s">
-                  <button className="btn" onClick={() => handleAction('replace', item)}>
+                <div className="actions">
+                  <button className="btn primary" onClick={() => handleAction('replace', item)}>
                     Replace
                   </button>
-                  <button className="btn" onClick={() => handleAction('add', item)}>
+                  <button className="btn secondary" onClick={() => handleAction('add', item)}>
                     Add
                   </button>
                 </div>
               </div>
             ))}
 
-            {sectionErrors.projects && (
-              <div className="error">Projects: {sectionErrors.projects}</div>
-            )}
             {suggestions.projects.map((item) => (
               <div
                 key={item.key}
@@ -518,22 +625,19 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
                 >
                   ×
                 </button>
-                {item.context && <h5>{item.context}</h5>}
+                {item.context && <h5 className="card-title">{item.context}</h5>}
                 <BeforeAfterSlider before={item.old} after={item.improved} />
-                <div className="row gap-s">
-                  <button className="btn" onClick={() => handleAction('replace', item)}>
+                <div className="actions">
+                  <button className="btn primary" onClick={() => handleAction('replace', item)}>
                     Replace
                   </button>
-                  <button className="btn" onClick={() => handleAction('add', item)}>
+                  <button className="btn secondary" onClick={() => handleAction('add', item)}>
                     Add
                   </button>
                 </div>
               </div>
             ))}
 
-            {sectionErrors.skills && (
-              <div className="error">Skills: {sectionErrors.skills}</div>
-            )}
             {suggestions.skills.length > 0 && (
               <div className="skill-suggestions">
                 {suggestions.skills.map((item) => (
@@ -584,6 +688,37 @@ function AiSuggestions({ resumeData, onSuggestionReceived }) {
           </p>
         )}
       </div>
+
+      {import.meta.env.DEV && debugLogs.length > 0 && (
+        <div className="ai-debug">
+          <button
+            className="btn debug-toggle"
+            onClick={() => setShowDebug((s) => !s)}
+          >
+            AI Debug
+          </button>
+          {showDebug && (
+            <ul>
+              {debugLogs.map((log) => (
+                <li key={log.requestId}>
+                  <span>
+                    {log.section}
+                    {log.entityId ? ` (${log.entityId})` : ''}: {log.outcome}
+                  </span>
+                  {log.raw && (
+                    <button
+                      className="btn"
+                      onClick={() => navigator.clipboard.writeText(log.raw)}
+                    >
+                      copy raw
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </>
   );
 }
