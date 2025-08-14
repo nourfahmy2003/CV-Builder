@@ -1,13 +1,14 @@
-import React, { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import './App.css';
 
 // Forms
 import ExperienceForm from './sections/experiences';
 import EducationForm from './sections/education';
-import Resume from './sections/resume';
+import ResumePreview from './components/ResumePreview';
 import SkillForm from './sections/skills';
 import ProjectForm from './sections/projects';
+import CollapsibleCard from './components/CollapsibleCard';
 
 // UI
 import SidebarLayout from './components/SidebarLayout';
@@ -41,9 +42,31 @@ function App() {
     documentTitle: 'Resume',
   });
 
+  // Theme
+  const [theme, setTheme] = useState(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+
   return (
     <SidebarLayout
-      topbar={<TopBar onPrint={handlePrint} onReset={handleReset} onDefault={handleDefault} />}
+      topbar={
+        <TopBar
+          onPrint={handlePrint}
+          onReset={handleReset}
+          onDefault={handleDefault}
+          onToggleTheme={toggleTheme}
+          theme={theme}
+        />
+      }
       sidebar={
         <>
           <div className="grid grid-2">
@@ -139,8 +162,7 @@ function App() {
           </div>
 
 
-          <div className="card">
-            <h3>Education</h3>
+          <CollapsibleCard title="Education">
             <label className="checkbox-label">
               <input
                 type="checkbox"
@@ -151,31 +173,40 @@ function App() {
               Include GPA
             </label>
             <EducationForm data={data} setData={setData} removeEducation={removeEducation} />
-            <button type="button" className="btn" onClick={addEducation}>Add Education</button>
-          </div>
+            <button type="button" className="btn" onClick={addEducation}>
+              Add Education
+            </button>
+          </CollapsibleCard>
 
-          <div className="card">
-            <h3>Experience</h3>
-            <ExperienceForm data={data} setData={setData} removeExperience={removeExperience} />
-            <button type="button" className="btn" onClick={addExperience}>Add Experience</button>
-          </div>
+          <CollapsibleCard title="Experience">
+            <ExperienceForm
+              data={data}
+              setData={setData}
+              removeExperience={removeExperience}
+            />
+            <button type="button" className="btn" onClick={addExperience}>
+              Add Experience
+            </button>
+          </CollapsibleCard>
 
-          <div className="card">
-            <h3>Skills</h3>
+          <CollapsibleCard title="Skills">
             <SkillForm data={data} setData={setData} removeSkill={removeSkill} />
-            <button type="button" className="btn" onClick={addSkill}>Add Skill</button>
-          </div>
+            <button type="button" className="btn" onClick={addSkill}>
+              Add Skill
+            </button>
+          </CollapsibleCard>
 
-          <div className="card">
-            <h3>Projects</h3>
+          <CollapsibleCard title="Projects">
             <ProjectForm data={data} setData={setData} removeProject={removeProject} />
-            <button type="button" className="btn" onClick={addProject}>Add Project</button>
-          </div>
+            <button type="button" className="btn" onClick={addProject}>
+              Add Project
+            </button>
+          </CollapsibleCard>
 
           <ResumeImprover resumeData={data} setData={setData} />
         </>
       }
-      preview={<div className="preview-container" ref={printRef}><div className="preview-paper"><Resume data={data} /></div></div>}
+      preview={<ResumePreview ref={printRef} data={data} />}
     />
   );
 }
