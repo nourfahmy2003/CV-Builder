@@ -17,8 +17,10 @@ import ResumeImprover from './components/ResumeImprover';
 
 // Hooks
 import { useResumeData } from './hooks/useResumeData';
+import { useTheme } from './hooks/useTheme';
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const {
     data,
     setData,
@@ -43,15 +45,18 @@ function App() {
   });
 
   return (
-    <SidebarLayout
-      topbar={
-        <TopBar
-          onPrint={handlePrint}
-          onReset={handleReset}
-          onDefault={handleDefault}
-        />
-      }
-      sidebar={
+    <div className={`app theme-${theme}`}>
+      <SidebarLayout
+        topbar={
+          <TopBar
+            onPrint={handlePrint}
+            onReset={handleReset}
+            onDefault={handleDefault}
+            onToggleTheme={toggleTheme}
+            theme={theme}
+          />
+        }
+        sidebar={
         <>
           <div className="grid grid-2">
             <label>
@@ -157,7 +162,7 @@ function App() {
               Include GPA
             </label>
             <EducationForm data={data} setData={setData} removeEducation={removeEducation} />
-            <button type="button" className="btn" onClick={addEducation}>
+            <button type="button" className="btn primary" onClick={addEducation}>
               Add Education
             </button>
           </CollapsibleCard>
@@ -168,21 +173,21 @@ function App() {
               setData={setData}
               removeExperience={removeExperience}
             />
-            <button type="button" className="btn" onClick={addExperience}>
+            <button type="button" className="btn primary" onClick={addExperience}>
               Add Experience
             </button>
           </CollapsibleCard>
 
           <CollapsibleCard title="Skills">
             <SkillForm data={data} setData={setData} removeSkill={removeSkill} />
-            <button type="button" className="btn" onClick={addSkill}>
+            <button type="button" className="btn primary" onClick={addSkill}>
               Add Skill
             </button>
           </CollapsibleCard>
 
           <CollapsibleCard title="Projects">
             <ProjectForm data={data} setData={setData} removeProject={removeProject} />
-            <button type="button" className="btn" onClick={addProject}>
+            <button type="button" className="btn primary" onClick={addProject}>
               Add Project
             </button>
           </CollapsibleCard>
@@ -192,6 +197,7 @@ function App() {
       }
       preview={<ResumePreview ref={printRef} data={data} />}
     />
+    </div>
   );
 }
 

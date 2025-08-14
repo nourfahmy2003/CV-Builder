@@ -315,6 +315,7 @@ button:hover {
   border-color: var(--accent-color);
   padding: 8px 20px;
   font-weight: 600;
+  color: #fff;
   box-shadow: var(--subtle-shadow);
 }
 
@@ -324,14 +325,44 @@ button:hover {
   box-shadow: var(--elevated-shadow);
 }
 
+/* ghost button with subtle background so it stands out on the top bar */
 .btn.ghost {
-  background: var(--surface-color);
-  border-color: var(--border-color);
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--text-color);
+}
+.btn.ghost:hover {
+  background: var(--surface-2);
+}
+
+/* icon-only buttons */
+.btn.icon {
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+}
+
+/* outline style for secondary actions */
+.btn.secondary {
+  background: transparent;
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.btn.secondary:hover {
+  background: var(--brand-tint);
+  box-shadow: var(--subtle-shadow);
 }
 
 .btn.ghost.active {
   border-color: var(--accent-color);
   color: var(--accent-color);
+}
+
+/* spacing for buttons inside cards */
+.card > .btn {
+  margin-top: 20px;
 }
 
 .card {
@@ -397,13 +428,14 @@ button:hover {
 
 .card h4 {
   font-size: 15px;
-  color: #e5edff;
+  color: var(--muted-text);
   margin: 16px 0 12px;
   font-weight: 500;
   opacity: 0.9;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   position: relative;
 }
 
@@ -804,34 +836,4 @@ textarea {
   .preview-paper::before {
     display: none !important;
   }
-}
-
-.card h4{
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;   /* was space-between */
-  gap: 8px;                      /* space between text and X */
-}
-
-/* make sure nothing pushes it away */
-.card h4 .delete-btn{
-  margin-left: 0;                /* no auto margin pushing to the right */
-}
-
-.btn{
-  padding: 8px 12px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent-color);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.btn:hover{
-  background: var(--accent-color-hover);
-  transform: scale(1.02);
 }
