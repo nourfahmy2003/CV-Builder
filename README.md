@@ -97,6 +97,6 @@ CV-Builder/
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
-- GitHub: [NoureldeenF](https://github.com/NoureldeenF)
-- LinkedIn: [Noureldeen Fahmy](https://www.linkedin.com/in/noureldeen-fahmy/)
+- GitHub: [NoureldeenF](https://github.com/nourfahmy2003)
+- LinkedIn: [Noureldeen Fahmy](https://www.linkedin.com/in/nefahmy/)
 - Email: [nourfahmy2003@gmail.com](mailto:nourfahmy2003@gmail.com)
